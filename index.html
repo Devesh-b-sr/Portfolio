@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devesh AKA Devil</title>
+    
+    <link rel="icon" type="image/png" href="/logo.jpg">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* =====================================================================
+           1. UNIVERSAL CURSOR & PAGE ROUTING
+           ===================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important;
+        }
+
+        .page-view {
+            display: none;
+            width: 100%;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #global-cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: 36px; height: 36px;
+            pointer-events: none;
+            z-index: 9999999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s;
+        }
+        .cursor-ring {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 2px solid var(--accent-red);
+            border-radius: 50%;
+            animation: cursorSpin 4s linear infinite;
+        }
+        .cursor-dot {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 6px; height: 6px;
+            background: var(--text-cream);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 5px var(--accent-red);
+        }
+
+        body.hovering #global-cursor {
+            width: 52px; height: 52px;
+        }
+        body.hovering .cursor-ring {
+            border-color: var(--accent-green);
+            border-style: dashed;
+            animation: cursorSpin 1.5s linear infinite;
+        }
+        body.hovering .cursor-dot {
+            background: var(--accent-green);
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        @keyframes cursorSpin { 100% { transform: rotate(360deg); } }
+
+        /* =====================================================================
+           2. CSS VARIABLES & BASE STYLING
+           ===================================================================== */
+        :root {
+            --bg-dark: #070707;
+            --bg-panel: #111111;
+            --bg-alt: #0d0d0d;
+            --bg-red-tint: #160a0a;
+            --text-cream: #f4ebd8;
+            --accent-red: #d91616;
+            --accent-green: #4ade80;
+            --accent-orange: #ff5500;
+            --accent-purple: #a855f7;
+            --accent-blue: #2f81f7;
+            --grid-line: rgba(244, 235, 216, 0.06);
+            --charcoal: #161616;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-cream);
+            font-family: 'Space Mono', monospace;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            background: rgba(7, 7, 7, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--grid-line);
+            z-index: 500;
+        }
+        .nav-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--accent-red);
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            color: var(--text-cream);
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-red);
+        }
+
+        /* Home Page specific */
+        .showcase-stage {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 6rem 2rem 3rem;
+            text-align: center;
+            border-bottom: 1px solid var(--grid-line);
+        }
+        .meta-header {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 1rem 0.5rem;
+            margin-bottom: -1rem;
+            z-index: 5;
+        }
+        .meta-header .role-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-cream);
+        }
+        .meta-header .year-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--accent-red);
+        }
+        .portfolio-title-lockup {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 900;
+            font-size: clamp(3.8rem, 11vw, 10.5rem);
+            line-height: 0.85;
+            letter-spacing: -2px;
+            color: var(--text-cream);
+            text-transform: uppercase;
+            position: relative;
+            user-select: none;
+        }
+        .avatar-frame {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0.08em;
+            transform: translateY(-4%);
+        }
+        .avatar-svg {
+            width: clamp(75px, 11.5vw, 175px);
+            height: auto;
+            filter: drop-shadow(0 0 16px rgba(217, 22, 22, 0.45));
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
+        }
+        .avatar-svg #hornLeft, .avatar-svg #hornRight, .avatar-svg #eyeLeft, .avatar-svg #eyeRight, .avatar-svg #browLeft, .avatar-svg #browRight, .avatar-svg #hairOutline, .avatar-svg #jawline {
+            transition: all 0.35s ease-in-out;
+            transform-origin: center;
+        }
+        .avatar-frame:hover .avatar-svg { transform: scale(1.12) rotate(-3deg); filter: drop-shadow(0 0 28px rgba(217, 22, 22, 0.85)) drop-shadow(0 0 8px #ff4d4d); }
+        .avatar-frame:hover .avatar-svg #eyeLeft, .avatar-frame:hover .avatar-svg #eyeRight { fill: var(--accent-red) !important; filter: drop-shadow(0 0 6px #ff1a1a); animation: ocularPulse 1.2s infinite alternate ease-in-out; }
+        .avatar-frame:hover .avatar-svg #hornLeft { transform: translateY(-5px) scale(1.18) rotate(-4deg); filter: drop-shadow(0 0 8px var(--accent-red)); }
+        .avatar-frame:hover .avatar-svg #hornRight { transform: translateY(-5px) scale(1.18) rotate(4deg); filter: drop-shadow(0 0 8px var(--accent-red)); }
+        .avatar-frame:hover .avatar-svg #browLeft { transform: translateY(2px) rotate(3deg); }
+        .avatar-frame:hover .avatar-svg #browRight { transform: translateY(2px) rotate(-3deg); }
+        .avatar-frame:hover .avatar-svg #jawline { stroke: #ffffff; }
+
+        @keyframes ocularPulse { 0% { filter: drop-shadow(0 0 3px #d91616); } 100% { filter: drop-shadow(0 0 10px #ff3333); } }
+
+        .pointer-callout { position: absolute; top: -100px; right: 50%; transform: translateX(120px); display: flex; flex-direction: column; align-items: flex-start; pointer-events: none; z-index: 20; }
+        .aka-badge { background: rgba(217, 22, 22, 0.12); border: 1px solid var(--accent-red); color: var(--text-cream); font-family: 'Space Mono', monospace; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; letter-spacing: 2px; text-transform: uppercase; border-radius: 2px; box-shadow: 0 0 12px rgba(217, 22, 22, 0.3); margin-bottom: 2px; margin-left: 15px; white-space: nowrap; opacity: 0; transform: translateY(4px); animation: textRevealCycle 3.5s ease-in-out infinite; }
+        .aka-badge span { color: var(--accent-red); }
+        .ray-arrow { width: 100px; height: 80px; overflow: visible; }
+        .ray-arrow path { fill: none; stroke: var(--accent-red); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100; stroke-dashoffset: 100; animation: rayDrawHold 3.5s ease-out infinite; filter: drop-shadow(0 0 4px var(--accent-red)); }
+        #arrowHead polygon { opacity: 0; animation: arrowHeadSync 3.5s ease-out infinite; }
+
+        @keyframes rayDrawHold { 0% { stroke-dashoffset: 100; opacity: 0; } 5% { opacity: 1; } 42.8% { stroke-dashoffset: 0; opacity: 1; } 95% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+        @keyframes arrowHeadSync { 0%, 38% { opacity: 0; } 42.8%, 95% { opacity: 1; } 100% { opacity: 0; } }
+        @keyframes textRevealCycle { 0%, 38% { opacity: 0; transform: translateY(4px); } 42.8% { opacity: 1; transform: translateY(0); } 95% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-2px); } }
+
+        .symbol-strip { display: flex; gap: 1.8rem; align-items: center; justify-content: center; margin-top: 3.5rem; }
+        .symbol-strip i { color: var(--text-cream); font-size: 1.4rem; transition: all 0.3s ease; opacity: 0.85; }
+        .symbol-strip i.star-mid { font-size: 1.9rem; color: var(--accent-red); transform: rotate(45deg); }
+        .symbol-strip:hover i { color: var(--accent-red); transform: scale(1.2); }
+        .terminal-readout { margin-top: 3rem; border: 1px solid var(--grid-line); background: #161616; padding: 1.2rem 2.5rem; display: inline-flex; gap: 2.5rem; font-size: 0.8rem; letter-spacing: 2px; color: #777; text-transform: uppercase; }
+        .terminal-readout span strong { color: var(--text-cream); }
+
+        .section-wrapper { padding: 7rem 5% 6rem; max-width: 1300px; margin: 0 auto; }
+        .section-heading { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; color: var(--accent-red); margin-bottom: 3.5rem; display: flex; align-items: center; gap: 20px; }
+        .section-heading::after { content: ''; flex-grow: 1; height: 1px; background: var(--grid-line); }
+        .card-list { display: flex; flex-direction: column; gap: 4rem; }
+        .custom-card { border: 1px solid var(--grid-line); background: rgba(255, 255, 255, 0.02); padding: 3.5rem; position: relative; transition: all 0.3s ease; }
+        .custom-card:hover { border-color: var(--accent-red); box-shadow: 0 10px 30px rgba(217, 22, 22, 0.1); }
+        .custom-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent-red); }
+        .card-header-flex { display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; border-bottom: 1px solid var(--grid-line); padding-bottom: 1.5rem; }
+        .coded-logo { width: 75px; height: 75px; flex-shrink: 0; }
+        .main-title { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; line-height: 1; color: var(--text-cream); }
+        .tag-line { font-size: 1rem; color: var(--accent-red); letter-spacing: 1px; margin-top: 0.3rem; }
+        .date-badge { font-size: 0.85rem; color: var(--accent-green); letter-spacing: 1.5px; margin-top: 0.2rem; }
+        .detail-bullets { list-style: none; margin-bottom: 2rem; }
+        .detail-bullets li { font-size: 1.05rem; line-height: 1.8; color: #a0a0a0; margin-bottom: 1rem; padding-left: 2rem; position: relative; }
+        .detail-bullets li::before { content: '>>'; position: absolute; left: 0; color: var(--accent-red); font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; }
+        .sub-specialty-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 2rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 2rem; }
+        .sub-card { background: #090909; border: 1px solid var(--grid-line); padding: 1.8rem; }
+        .sub-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text-cream); margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+        .sub-card-title i { color: var(--accent-red); font-size: 1.3rem; }
+        .sub-bullets { list-style: none; }
+        .sub-bullets li { font-size: 0.9rem; line-height: 1.6; color: #888; margin-bottom: 0.6rem; padding-left: 1.2rem; position: relative; }
+        .sub-bullets li::before { content: '•'; position: absolute; left: 0; color: var(--accent-red); }
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .contact-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--grid-line); padding: 2rem; display: flex; align-items: center; gap: 1.5rem; text-decoration: none; color: var(--text-cream); transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .contact-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent-red); opacity: 0.4; transition: opacity 0.3s ease; }
+        .contact-card:hover { border-color: var(--accent-red); transform: translateY(-4px); background: rgba(217, 22, 22, 0.05); box-shadow: 0 10px 30px rgba(217, 22, 22, 0.2); }
+        .contact-card:hover::before { opacity: 1; }
+        .contact-icon-box { width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; background: #000; border: 1px solid var(--grid-line); flex-shrink: 0; }
+        .contact-icon-box svg { width: 32px; height: 32px; }
+        .contact-info-block { display: flex; flex-direction: column; overflow: hidden; }
+        .contact-label { font-size: 0.75rem; color: #777; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 0.3rem; }
+        .contact-val { font-size: 1rem; font-weight: 700; color: var(--text-cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; }
+        .contact-card:hover .contact-val { color: var(--accent-red); }
+
+        /* Experience & Projects Page specific */
+        .page-header { padding: 11rem 5% 4rem; border-bottom: 1px solid var(--grid-line); text-align: center; background: linear-gradient(180deg, rgba(217, 22, 22, 0.08) 0%, transparent 100%); }
+        .page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.8rem, 8.5vw, 7.5rem); color: var(--accent-red); line-height: 0.9; letter-spacing: 3px; }
+        .page-subtitle { font-size: 1.1rem; color: #888; margin-top: 1rem; letter-spacing: 2px; text-transform: uppercase; }
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 5rem 5% 8rem; }
+        
+        .experience-grid, .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; margin-bottom: 3rem; }
+        .exp-card, .project-card { border: 1px solid var(--grid-line); background: rgba(255, 255, 255, 0.02); overflow: hidden; position: relative; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
+        .exp-card:hover, .project-card:hover { border-color: var(--accent-red); transform: translateY(-6px); box-shadow: 0 15px 40px rgba(217, 22, 22, 0.2); }
+        .exp-card::before, .project-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--accent-red); opacity: 0; transition: opacity 0.3s ease; z-index: 5; }
+        .exp-card:hover::before, .project-card:hover::before { opacity: 1; }
+        
+        .card-thumb-wrap { width: 100%; min-height: 260px; display: flex; align-items: center; justify-content: center; position: relative; background: #020202; padding: 1.5rem; border-bottom: 1px solid var(--grid-line); }
+        .card-thumb { max-width: 100%; height: auto; max-height: 260px; object-fit: contain; filter: contrast(1.05); transition: transform 0.4s ease; }
+        .exp-card:hover .card-thumb, .project-card:hover .card-thumb { transform: scale(1.03); }
+        .card-footer-info { padding: 2rem; display: flex; justify-content: space-between; align-items: center; background: #111111; flex-grow: 1; }
+        .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--text-cream); letter-spacing: 1.5px; line-height: 1.1; }
+        .card-badge { font-size: 0.8rem; color: var(--accent-red); letter-spacing: 1px; text-transform: uppercase; margin-top: 0.4rem; }
+        .expand-prompt { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: #888; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; transition: color 0.3s ease; white-space: nowrap; margin-left: 1rem; }
+        .exp-card:hover .expand-prompt, .project-card:hover .expand-prompt { color: var(--accent-red); }
+
+        .project-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 5, 5, 0.96); backdrop-filter: blur(16px); z-index: 1000; display: none; overflow-y: auto; padding: 4rem 5%; }
+        .project-modal.open { display: block; }
+        .modal-inner { max-width: 1200px; margin: 0 auto; position: relative; padding-bottom: 6rem; }
+        .close-btn { position: fixed; top: 2rem; right: 3rem; background: #161616; border: 1px solid var(--accent-red); color: var(--text-cream); font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; padding: 8px 22px; letter-spacing: 2px; z-index: 1100; transition: all 0.3s ease; }
+        .close-btn:hover { background: var(--accent-red); color: #fff; box-shadow: 0 0 20px rgba(217, 22, 22, 0.4); }
+        .modal-hero { padding: 3rem 0; border-bottom: 1px solid var(--grid-line); margin-bottom: 4rem; }
+        .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.2rem, 6.5vw, 5.8rem); color: var(--accent-red); line-height: 0.95; letter-spacing: 2px; }
+        .modal-tagline { font-size: 1.1rem; color: #888; letter-spacing: 2px; margin-top: 1rem; text-transform: uppercase; }
+
+        .project-core-summary { background: rgba(217, 22, 22, 0.04); border: 1px solid var(--accent-red); padding: 2.5rem; margin-bottom: 4rem; position: relative; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); }
+        .project-core-summary::before { content: 'CORE ARCHITECTURE'; position: absolute; top: -12px; left: 20px; background: var(--bg-dark); padding: 2px 12px; font-family: 'Space Mono', monospace; font-size: 0.75rem; font-weight: 700; color: var(--accent-red); letter-spacing: 1.5px; border: 1px solid var(--accent-red); }
+        .core-summary-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--text-cream); letter-spacing: 1.5px; margin-bottom: 1rem; }
+        .core-summary-text { font-size: 1rem; line-height: 1.8; color: #c0c0c0; }
+        .core-summary-text strong { color: var(--text-cream); }
+        .core-pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 1.8rem; padding-top: 1.5rem; border-top: 1px dashed rgba(217, 22, 22, 0.3); }
+        .pillar-item { display: flex; flex-direction: column; gap: 0.3rem; }
+        .pillar-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent-red); letter-spacing: 1px; }
+        .pillar-desc { font-size: 0.85rem; line-height: 1.5; color: #888; }
+
+        .detail-stack { display: flex; flex-direction: column; gap: 3.5rem; }
+        .detail-card { background: #111111; border: 1px solid var(--grid-line); padding: 3rem; position: relative; }
+        .detail-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent-red); }
+        .detail-heading { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--text-cream); margin-bottom: 1rem; letter-spacing: 1px; }
+        .detail-text { font-size: 1rem; line-height: 1.8; color: #a0a0a0; margin-bottom: 1.5rem; }
+        .detail-text strong { color: var(--text-cream); }
+
+        .company-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.2rem; }
+        .svg-logo { width: 55px; height: 55px; color: var(--accent-red); }
+        .company-name { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; line-height: 1; letter-spacing: 1.5px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.2rem; margin-bottom: 1.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--grid-line); }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-label { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-bottom: 0.3rem; letter-spacing: 1px; }
+        .stat-value { font-size: 0.95rem; color: var(--accent-green); }
+
+        .tester-bullets { list-style: none; margin-bottom: 2rem; }
+        .tester-bullets li { font-size: 1.05rem; line-height: 1.8; color: #bbb; margin-bottom: 1.2rem; padding-left: 2rem; position: relative; }
+        .tester-bullets li::before { content: '>>'; position: absolute; left: 0; color: var(--accent-red); font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; top: 1px; }
+
+        .cert-btn { display: inline-flex; align-items: center; gap: 12px; padding: 14px 28px; background: var(--accent-red); color: var(--bg-dark); text-decoration: none; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1px; transition: all 0.3s; }
+        .cert-btn:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(217, 22, 22, 0.4); }
+
+        .youtube-box { background: var(--bg-dark); border: 1px solid var(--grid-line); border-top: 3px solid var(--accent-red); padding: 3rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); margin-top: 2rem; }
+        .yt-channel-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--grid-line); }
+        .yt-logo { width: 65px; height: 65px; color: var(--accent-red); flex-shrink: 0; }
+        .yt-channel-name { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; line-height: 1; letter-spacing: 1px; }
+        .yt-channel-handle { font-size: 0.85rem; color: var(--accent-green); margin-top: 0.3rem; }
+        .yt-feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .yt-feature { border: 1px solid var(--grid-line); padding: 1.5rem; background: #111111; }
+        .yt-feature i { color: var(--accent-red); font-size: 1.3rem; margin-bottom: 0.8rem; display: block; }
+        .yt-feature-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 1px; margin-bottom: 0.4rem; }
+        .yt-feature-desc { font-size: 0.85rem; color: #888; line-height: 1.6; }
+
+        .esports-banner { width: 100%; height: auto; border: 1px solid var(--grid-line); margin-bottom: 2.5rem; position: relative; box-shadow: 0 15px 35px rgba(255, 85, 0, 0.15); background: #000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+        .esports-banner .banner-img { width: auto; max-width: 100%; height: auto; max-height: 600px; object-fit: contain; display: block; }
+        .esports-banner::after { content: 'FEATURED OPERATOR // TOURNAMENT READY'; position: absolute; bottom: 15px; right: 15px; background: rgba(0,0,0,0.85); padding: 6px 12px; font-size: 0.75rem; color: var(--accent-orange); border: 1px solid var(--accent-orange); font-family: 'Space Mono', monospace; }
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; background: #0d0d0d; border: 1px solid var(--grid-line); padding: 2rem; margin-bottom: 3rem; text-align: center; }
+        .stat-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; color: var(--accent-orange); line-height: 1; }
+        .stat-box p { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.4rem; }
+        .pro-circuit-row { display: flex; gap: 3rem; align-items: center; margin-bottom: 3rem; }
+        .pro-circuit-img-wrapper { flex: 1; height: auto; min-height: 360px; border: 1px solid var(--grid-line); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); background: #000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+        .pro-circuit-img-wrapper .circuit-img { width: auto; max-width: 100%; height: auto; max-height: 480px; object-fit: contain; display: block; }
+        .pro-circuit-text { flex: 1.4; }
+        .competency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 1.5rem; }
+        .comp-card { background: #0d0d0d; padding: 2rem; border-top: 2px solid var(--accent-orange); border-left: 1px solid var(--grid-line); border-right: 1px solid var(--grid-line); border-bottom: 1px solid var(--grid-line); }
+        .comp-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: #555; margin-bottom: 0.4rem; }
+        .comp-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; margin-bottom: 0.8rem; color: var(--text-cream); }
+        .comp-card p { color: #888; line-height: 1.6; font-size: 0.9rem; }
+        .creative-pillar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .creative-pillar-card { background: #0d0d0d; border: 1px solid var(--grid-line); border-top: 3px solid var(--accent-purple); padding: 2.2rem; display: flex; flex-direction: column; gap: 1rem; transition: all 0.3s ease; }
+        .creative-pillar-card:hover { transform: translateY(-4px); border-color: var(--accent-purple); box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15); }
+        .creative-icon { font-size: 2.5rem; color: var(--accent-purple); }
+        .creative-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--text-cream); letter-spacing: 1px; line-height: 1; }
+        .creative-card-desc { font-size: 0.9rem; line-height: 1.7; color: #aaa; }
+
+        .sketch-container { width: 100%; margin-top: 1.5rem; border: 1px solid rgba(217, 22, 22, 0.3); background: #000; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .sketch-image { width: auto; max-width: 100%; height: auto; display: block; filter: contrast(1.05); }
+        .sketch-prompt-box { width: 100%; font-size: 0.8rem; color: #777; margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.8rem; }
+        .video-wrapper { width: 100%; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 1px solid rgba(217, 22, 22, 0.4); background: #000; margin-top: 1.5rem; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .action-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
+        .btn-link { display: inline-flex; align-items: center; gap: 10px; background: var(--accent-red); color: #fff; padding: 12px 26px; font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 1px; text-decoration: none; transition: 0.3s; }
+        .btn-link:hover { background: #fff; color: #000; transform: translateY(-2px); }
+
+        @media (max-width: 850px) {
+            .meta-header { flex-direction: column; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+            .pointer-callout { top: -85px; right: 35%; transform: translateX(50px) scale(0.85); }
+            .terminal-readout { flex-direction: column; gap: 0.5rem; padding: 1rem; }
+            .card-header-flex { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
+            .experience-grid, .projects-grid { grid-template-columns: 1fr; }
+            .card-footer-info { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .close-btn { top: 1rem; right: 1.5rem; font-size: 1.2rem; padding: 6px 16px; }
+            .detail-card { padding: 2rem 1.5rem; }
+            .pro-circuit-row { flex-direction: column; }
+            .pro-circuit-img-wrapper { width: 100%; min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- UNIVERSAL ANIMATED CURSOR HTML -->
+    <div id="global-cursor">
+        <div class="cursor-ring"></div>
+        <div class="cursor-dot"></div>
+        <div class="crosshair-line-v"></div>
+        <div class="crosshair-line-h"></div>
+    </div>
+
+    <!-- UNIVERSAL MULTIPAGE HEADER -->
+    <nav>
+        <a href="#" class="nav-brand" onclick="switchPage('page-home')">DEV</a>
+        <div class="nav-links">
+            <a href="#" id="link-home" class="active" onclick="switchPage('page-home')">Home</a>
+            <a href="#" id="link-experience" onclick="switchPage('page-experience')">Experience</a>
+            <a href="#" id="link-projects" onclick="switchPage('page-projects')">Projects</a>
+        </div>
+    </nav>
+
+    <!-- ===================================================================
+         PAGE 1: HOME
+         =================================================================== -->
+    <div id="page-home" class="page-view active">
+        <main class="showcase-stage">
+            <div class="meta-header">
+                <span class="role-label">JACK OF ALL TRADES</span>
+                <span class="year-label">2026</span>
+            </div>
+
+            <div class="portfolio-title-lockup">
+                <span>PORTF</span>
+
+                <div class="avatar-frame">
+                    <div class="pointer-callout">
+                        <div class="aka-badge">DEVESH</div>
+                        <svg class="ray-arrow" viewBox="0 0 100 80">
+                            <defs>
+                                <marker id="arrowHead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                    <polygon points="0,0 6,3 0,6" fill="#d91616" />
+                                </marker>
+                            </defs>
+                            <path d="M 60 12 Q 35 22 18 62" marker-end="url(#arrowHead)" />
+                        </svg>
+                    </div>
+
+                    <svg class="avatar-svg" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path id="hairOutline" d="M42 96 L32 82 L44 74 L36 60 L52 52 L50 36 L68 30 L80 16 L100 20 L120 16 L132 30 L150 36 L148 52 L164 60 L156 74 L168 82 L158 96 L164 122 L152 136 L142 120 L134 100 L120 92 L100 90 L80 92 L66 100 L58 120 L48 136 L36 122 Z" fill="#F4EBD8"/>
+                        <path d="M46 90 L38 80 L48 72 L42 60 L54 54 L54 42 L68 36 L80 26 L100 28 L120 26 L132 36 L146 42 L146 54 L158 60 L152 72 L162 80 L154 90 L158 116 L148 126 L140 108 L130 84 L118 78 L100 76 L82 78 L70 84 L60 108 L52 126 L42 116 Z" fill="#070707"/>
+                        <path d="M44 102 C38 102 34 112 36 126 C38 138 46 142 50 138" stroke="#F4EBD8" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M156 102 C162 102 166 112 164 126 C162 138 154 142 150 138" stroke="#F4EBD8" stroke-width="4" stroke-linecap="round"/>
+                        <path id="jawline" d="M50 94 L50 136 L72 172 L100 184 L128 172 L150 136 L150 94 Z" fill="#070707" stroke="#F4EBD8" stroke-width="6" stroke-linejoin="miter"/>
+                        <polygon id="browLeft" points="56,100 92,106 90,113 56,105" fill="#F4EBD8"/>
+                        <polygon id="browRight" points="144,100 108,106 110,113 144,105" fill="#F4EBD8"/>
+                        <polygon points="62,118 90,121 82,129 64,124" fill="#F4EBD8"/>
+                        <rect id="eyeLeft" x="74" y="119" width="6" height="8" fill="#070707"/>
+                        <polygon points="138,118 110,121 118,129 136,124" fill="#F4EBD8"/>
+                        <rect id="eyeRight" x="120" y="119" width="6" height="8" fill="#070707"/>
+                        <path d="M98 108 L95 136 L106 136" stroke="#F4EBD8" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/>
+                        <path d="M82 152 L116 150 L120 146" stroke="#F4EBD8" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="92" y1="166" x2="108" y2="166" stroke="#F4EBD8" stroke-width="3" stroke-linecap="round"/>
+                        <polygon id="hornLeft" points="56,36 40,14 34,26 48,46" fill="#D91616"/>
+                        <polygon id="hornRight" points="144,36 160,14 166,26 152,46" fill="#D91616"/>
+                    </svg>
+                </div>
+
+                <span>LIO</span>
+            </div>
+
+            <div class="symbol-strip">
+                <i class="fa-solid fa-star-of-life"></i>
+                <i class="fa-solid fa-diamond star-mid"></i>
+                <i class="fa-solid fa-clover"></i>
+            </div>
+
+            <div class="terminal-readout">
+                <span>Identity: <strong>Dev [Devil]</strong></span>
+                <span>Designation: <strong>Lead QA / eSports / Narrative</strong></span>
+                <span>Status: <strong>Available For High-Impact Contracts</strong></span>
+            </div>
+        </main>
+
+        <section class="section-wrapper" style="padding-top: 5rem;">
+            <h2 class="section-heading">ACADEMIC FOUNDATIONS</h2>
+            
+            <div class="card-list">
+                <div class="custom-card">
+                    <div class="card-header-flex">
+                        <svg class="coded-logo" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100" height="130" fill="#c0151f" rx="3"/>
+                            <g transform="translate(50, 42)">
+                                <path d="M-5,-32 L5,-32 L7,-24 A26,26 0 0,1 18,-19 L25,-23 L32,-16 L28,-9 A26,26 0 0,1 32,4 L39,7 L39,17 L32,20 A26,26 0 0,1 25,33 L29,40 L22,47 L15,43 A26,26 0 0,1 4,47 L1,54 L-9,54 L-12,47 A26,26 0 0,1 -23,43 L-30,47 L-37,40 L-33,33 A26,26 0 0,1 -37,20 L-44,17 L-44,7 L-37,4 A26,26 0 0,1 -33,-9 L-37,-16 L-30,-23 L-23,-19 A26,26 0 0,1 -12,-24 Z" fill="#181818" transform="scale(0.65) translate(-1, -10)"/>
+                                <circle cx="-1" cy="4" r="11" fill="#3b82f6"/>
+                                <path d="M-8,1 Q-3,-3 3,0 Q7,5 1,11 Q-6,14 -8,7 Z" fill="#ffffff" opacity="0.8"/>
+                            </g>
+                            <text x="50" y="96" text-anchor="middle" fill="#ffffff" font-family="'Syne', 'Bebas Neue', sans-serif" font-weight="900" font-size="34">CU</text>
+                            <rect y="104" width="100" height="26" fill="#181818"/>
+                            <text x="50" y="116" text-anchor="middle" fill="#ffffff" font-family="'Space Mono', monospace" font-size="6.5" font-weight="bold" letter-spacing="0.5">CHANDIGARH</text>
+                            <text x="50" y="124" text-anchor="middle" fill="#ffffff" font-family="'Space Mono', monospace" font-size="6.5" font-weight="bold" letter-spacing="0.5">UNIVERSITY</text>
+                        </svg>
+
+                        <div>
+                            <h3 class="main-title">CHANDIGARH UNIVERSITY</h3>
+                            <div class="tag-line">BACHELOR OF COMPUTER APPLICATIONS (BCA)</div>
+                            <div class="date-badge">COMPLETED MAY 2026</div>
+                        </div>
+                    </div>
+
+                    <ul class="detail-bullets">
+                        <li>Built comprehensive algorithmic foundations spanning data structures, database architecture, and object-oriented paradigms.</li>
+                        <li>Applied technical software design directly toward real-time game architecture, dynamic logic parsing, and backend database schemas.</li>
+                    </ul>
+
+                    <div class="sub-specialty-grid">
+                        <div class="sub-card">
+                            <h4 class="sub-card-title"><i class="fa-solid fa-cubes"></i> ADVANCED MULTIMEDIA & ANIMATION</h4>
+                            <ul class="sub-bullets">
+                                <li><strong>Blender:</strong> Hard-surface 3D modeling, lighting setups, keyframe staging, and character turnaround pipelines.</li>
+                                <li><strong>Adobe Animate:</strong> Kinetic 2D frame-by-frame pacing, motion tweens, and vector UI asset production.</li>
+                                <li><strong>Adobe Photoshop:</strong> Digital concept sketching, texture mapping, high-contrast matte finishes, and layout composition.</li>
+                            </ul>
+                        </div>
+
+                        <div class="sub-card">
+                            <h4 class="sub-card-title"><i class="fa-solid fa-map-location-dot"></i> ADVANCED TOUR PLANNING</h4>
+                            <ul class="sub-bullets">
+                                <li><strong>Route & Terrain Navigation:</strong> Strategic logistical roadmapping, elevation analysis, and risk contingency management across remote geographies.</li>
+                                <li><strong>Client Management & Scheduling:</strong> Budget allocation, timeline execution, and dynamic negotiation in high-pressure operational environments.</li>
+                                <li><strong>Real-World Inspiration:</strong> Practical field operations directly fueling believable, gritty environmental level design in game narrative documents.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="custom-card">
+                    <div class="card-header-flex">
+                        <svg class="coded-logo" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18,48 Q10,75 32,95 Q50,108 68,95 Q90,75 82,48" fill="none" stroke="#22c55e" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M22,46 Q16,70 34,88 Q50,100 66,88 Q84,70 78,46" fill="none" stroke="#eab308" stroke-width="2.5" stroke-dasharray="3 3"/>
+                            <circle cx="50" cy="36" r="18" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+                            <circle cx="50" cy="36" r="12" fill="none" stroke="#f97316" stroke-width="2"/>
+                            <circle cx="40" cy="33" r="5" fill="#f97316"/>
+                            <circle cx="60" cy="33" r="5" fill="#f97316"/>
+                            <rect x="33" y="40" width="34" height="15" rx="3" fill="#ea580c"/>
+                            <path d="M35,62 L50,56 L65,62 L65,74 L50,68 L35,74 Z" fill="#ffffff" stroke="#1d4ed8" stroke-width="2"/>
+                            <rect x="32" y="76" width="36" height="6" fill="#1e40af" rx="1"/>
+                            <text x="50" y="114" text-anchor="middle" fill="#2563eb" font-family="'Space Mono', monospace" font-size="7" font-weight="bold">प्रज्ञानं ब्रह्म</text>
+                        </svg>
+
+                        <div>
+                            <h3 class="main-title">JAWAHAR NAVODAYA VIDYALAYA (JNV) MOHALI</h3>
+                            <div class="tag-line">HIGHER SECONDARY (12TH) — NON-MEDICAL WITH COMPUTER SCIENCE</div>
+                            <div class="date-badge">COMPLETED MAY 2023</div>
+                        </div>
+                    </div>
+
+                    <ul class="detail-bullets">
+                        <li><strong>Rigorous Boarding School Environment:</strong> Lived and studied in a 24/7 residential setting, instilling radical independence, team adaptability, and self-governing accountability under strict daily schedules.</li>
+                        <li><strong>Non-Medical STEM Core:</strong> Advanced coursework in Physics, Chemistry, and Mathematics, cultivating the analytical discipline required for systemic game balancing, trajectory calculations, and logical algorithms.</li>
+                        <li><strong>Computer Science Specialization:</strong> Early foundational mastery of computational thinking, program control flow, and code structuring that bridged directly into subsequent software design degrees.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-wrapper" style="padding-top: 2rem;">
+            <h2 class="section-heading">COMMS & CONNECTIVITY</h2>
+            
+            <div class="contact-grid">
+                <a href="tel:+919877981434" class="contact-card">
+                    <div class="contact-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#d91616" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info-block">
+                        <span class="contact-label">TELEPHONE // VOICE</span>
+                        <span class="contact-val">+91 98779 81434</span>
+                    </div>
+                </a>
+
+                <a href="mailto:deveshbangar2005@gmail.com" class="contact-card">
+                    <div class="contact-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#d91616" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info-block">
+                        <span class="contact-label">DIRECT DISPATCH</span>
+                        <span class="contact-val">deveshbangar2005@gmail.com</span>
+                    </div>
+                </a>
+
+                <a href="https://www.linkedin.com/in/devesh-bangar-56420b351" target="_blank" rel="noopener noreferrer" class="contact-card">
+                    <div class="contact-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#2f81f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                            <rect x="2" y="9" width="4" height="12"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info-block">
+                        <span class="contact-label">PROFESSIONAL DOSSIER</span>
+                        <span class="contact-val">LinkedIn // Devesh Bangar</span>
+                    </div>
+                </a>
+
+                <a href="https://github.com/Devesh-b-sr" target="_blank" rel="noopener noreferrer" class="contact-card">
+                    <div class="contact-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#f4ebd8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info-block">
+                        <span class="contact-label">SOURCE REPOSITORIES</span>
+                        <span class="contact-val">GitHub // Devesh-b-sr</span>
+                    </div>
+                </a>
+
+                <a href="https://www.polarsteps.com/TheDevil2123" target="_blank" rel="noopener noreferrer" class="contact-card">
+                    <div class="contact-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#ff5500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info-block">
+                        <span class="contact-label">EXPEDITION TRACKER</span>
+                        <span class="contact-val">Polarsteps // TheDevil2123</span>
+                    </div>
+                </a>
+
+                <a href="https://steamcommunity.com/id/21stAVENGER/" target="_blank" rel="noopener noreferrer" class="contact-card">
+                    <div class="contact-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="15.5" cy="8.5" r="2.5"/>
+                            <circle cx="8" cy="15.5" r="2"/>
+                            <line x1="13.5" y1="10" x2="9.5" y2="14"/>
+                            <line x1="8" y1="13.5" x2="5" y2="13"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info-block">
+                        <span class="contact-label">BATTLE PLATFORM</span>
+                        <span class="contact-val">Steam // 21stAVENGER</span>
+                    </div>
+                </a>
+
+                <a href="https://discord.com/users/1194189269141557329" target="_blank" rel="noopener noreferrer" class="contact-card">
+                    <div class="contact-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6h0c1.5 2 2.5 4.5 2.5 7.5 0 0-1.5 2.5-4.5 2.5l-1-1.5c1.5-.5 2.5-1.5 2.5-1.5-1 .5-2.5 1-4.5 1s-3.5-.5-4.5-1c0 0 1 1 2.5 1.5l-1 1.5C6.5 16 5 13.5 5 13.5 5 10.5 6 8 7.5 6h0c1.5-1 3.5-1 4.5-.5.5-.5 1.5-.5 2-.5 1 0 3 0 4.5 1z"/>
+                            <circle cx="9.5" cy="11.5" r="1.5" fill="#a855f7"/>
+                            <circle cx="14.5" cy="11.5" r="1.5" fill="#a855f7"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info-block">
+                        <span class="contact-label">COMMUNICATION MATRIX</span>
+                        <span class="contact-val">Discord // 1194189269141557329</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===================================================================
+         VIEW 2: EXPERIENCE
+         =================================================================== -->
+    <div id="page-experience" class="page-view">
+        <header class="page-header">
+            <h1 class="page-title">PROFESSIONAL EXPERIENCE</h1>
+            <p class="page-subtitle">Game QA Testing Deployments // High-Volume Commercial Sales // Pro eSports Career // Creative Studio Engine</p>
+        </header>
+
+        <div class="main-container">
+            <div class="experience-grid">
+                
+                <div class="exp-card" onclick="openModal('qa-modal')">
+                    <div class="card-thumb-wrap">
+                        <svg viewBox="0 0 100 100" style="width: 130px; height: 130px; color: var(--accent-red);">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="8" stroke-dasharray="190 60" stroke-linecap="round"/>
+                            <rect x="50" y="44" width="25" height="12" fill="currentColor" rx="2"/>
+                            <circle cx="50" cy="50" r="8" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="card-footer-info">
+                        <div>
+                            <h2 class="card-title">GAME TESTING & QA DEPLOYMENTS</h2>
+                            <div class="card-badge">TOP 0.5% GLOBALLY // 5+ STUDIOS & YOUTUBE PROOF</div>
+                        </div>
+                        <div class="expand-prompt">
+                            OPEN <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exp-card" onclick="openModal('travel-modal')">
+                    <div class="card-thumb-wrap">
+                        <i class="fa-solid fa-plane-departure" style="font-size: 5.5rem; color: var(--accent-red); opacity: 0.9;"></i>
+                    </div>
+                    <div class="card-footer-info">
+                        <div>
+                            <h2 class="card-title">TRAVEL SALES CONSULTANT</h2>
+                            <div class="card-badge">TRAVELOCAT AGENCY // JUNE 2026 - AUG 2026</div>
+                        </div>
+                        <div class="expand-prompt">
+                            OPEN <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exp-card" onclick="openModal('esports-modal')">
+                    <div class="card-thumb-wrap">
+                        <i class="fa-solid fa-crosshairs" style="font-size: 5.5rem; color: var(--accent-orange); opacity: 0.9;"></i>
+                    </div>
+                    <div class="card-footer-info">
+                        <div>
+                            <h2 class="card-title">eSPORTS ATHLETE (CODM)</h2>
+                            <div class="card-badge">6 YEARS VETERAN // 2+ YEARS PRO CIRCUIT</div>
+                        </div>
+                        <div class="expand-prompt">
+                            OPEN <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exp-card" onclick="openModal('creative-modal')">
+                    <div class="card-thumb-wrap">
+                        <i class="fa-solid fa-pen-nib" style="font-size: 5.5rem; color: var(--accent-purple); opacity: 0.9;"></i>
+                    </div>
+                    <div class="card-footer-info">
+                        <div>
+                            <h2 class="card-title">CREATIVE WORK & FREELANCE STUDIO</h2>
+                            <div class="card-badge">CONTENT WRITING // GDD // SOCIAL MEDIA // CREATIVE</div>
+                        </div>
+                        <div class="expand-prompt">
+                            OPEN <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         VIEW 3: PROJECTS
+         =================================================================== -->
+    <div id="page-projects" class="page-view">
+        <header class="page-header">
+            <h1 class="page-title">PROJECT ARCHIVE</h1>
+            <p class="page-subtitle">Narrative Blueprints // Cinematic Productions // Desktop Publishing</p>
+        </header>
+
+        <div class="main-container">
+            <div class="projects-grid">
+                
+                <div class="project-card" onclick="openProject('kuldhara-modal')">
+                    <div class="card-thumb-wrap">
+                        <img src="/brother's path.png" alt="Shadows of Kuldhara" class="card-thumb" onerror="this.src='./images/brothers-path.png'">
+                    </div>
+                    <div class="card-footer-info">
+                        <div>
+                            <h2 class="card-title">SHADOWS OF KULDHARA</h2>
+                            <div class="card-badge">LEAD NARRATIVE DESIGN & GDD</div>
+                        </div>
+                        <div class="expand-prompt">
+                            OPEN ARCHIVE <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openProject('cinema-modal')">
+                    <div class="card-thumb-wrap">
+                        <img src="./images/absolute_cinema_thumb.jpg" alt="Absolute Cinema" class="card-thumb" onerror="this.src='https://img.youtube.com/vi/rTDmtfthcmU/maxresdefault.jpg'">
+                    </div>
+                    <div class="card-footer-info">
+                        <div>
+                            <h2 class="card-title">ABSOLUTE CINEMA</h2>
+                            <div class="card-badge">ENTERTAINMENT ECOSYSTEM & MEDIA HUB</div>
+                        </div>
+                        <div class="expand-prompt">
+                            OPEN ARCHIVE <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openProject('dtp-modal')">
+                    <div class="card-thumb-wrap">
+                        <img src="./images/dtp_thumb.png" alt="Desktop Publishing Project" class="card-thumb" onerror="this.src='https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600'">
+                    </div>
+                    <div class="card-footer-info">
+                        <div>
+                            <h2 class="card-title"> PHOTO EDITS </h2>
+                            <div class="card-badge">GRAPHIC DESIGN // COMPOSITING & TYPOGRAPHY</div>
+                        </div>
+                        <div class="expand-prompt">
+                            OPEN ARCHIVE <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         MODALS (POPUP WINDOWS FOR EXPERIENCES & PROJECTS)
+         =================================================================== -->
+    
+    <!-- MODAL 1: GAME TESTING DEPLOYMENTS -->
+    <div id="qa-modal" class="project-modal">
+        <button class="close-btn" onclick="closeModal('qa-modal')"><i class="fa-solid fa-xmark"></i> CLOSE ARCHIVE</button>
+        
+        <div class="modal-inner">
+            <header class="modal-hero">
+                <h1 class="modal-title">QA & GAME TESTING DEPLOYMENTS</h1>
+                <p class="modal-tagline">Pre-Release Evaluation // Telemetry & Engine Audits // Top 0.5% Certified Global Standing</p>
+            </header>
+
+            <div class="project-core-summary">
+                <h2 class="core-summary-title">THE QA ARCHITECTURE & METHODOLOGY</h2>
+                <p class="core-summary-text">
+                    Game testing is not playing; it is <strong>systematic deconstruction</strong>. Across closed and confidential builds for AAA, AA, and independent publishers, this practice evaluates physics boundary limits, frame delivery, TTK equilibrium, and linguistic localization fidelity. Ranked officially in the <strong>Top 0.5% of Game Testers worldwide</strong> on G.Round, every finding is delivered with deterministic, reproducible step logs, crash diagnostics, and gameplay proof recordings.
+                </p>
+                <div class="core-pillars">
+                    <div class="pillar-item">
+                        <span class="pillar-label">01 // UNREAL COLLISION AUDITING</span>
+                        <span class="pillar-desc">World boundary stress testing, physics anomalies, and vertex clipping verification.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">02 // FIRST-HOUR UX & FTUE</span>
+                        <span class="pillar-desc">Think-aloud audio evaluation isolating early retention drop-offs and control friction.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">03 // LQA & LOCALIZATION INTEGRITY</span>
+                        <span class="pillar-desc">Cross-lingual string integrity, text overflow corrections, and cultural pacing.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-stack">
+                <div class="detail-card">
+                    <div class="company-header">
+                        <svg viewBox="0 0 100 100" class="svg-logo">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="12" stroke-dasharray="190 60" stroke-linecap="round"/>
+                            <rect x="50" y="44" width="25" height="12" fill="currentColor" rx="2"/>
+                            <circle cx="50" cy="50" r="8" fill="currentColor"/>
+                        </svg>
+                        <h2 class="company-name">G.ROUND</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item"><span class="stat-label">Duration</span><span class="stat-value">JUL 2024 - PRESENT</span></div>
+                        <div class="stat-item"><span class="stat-label">Focus Area</span><span class="stat-value">Pre-Release Pacing & Mechanics</span></div>
+                    </div>
+                    <ul class="tester-bullets">
+                        <li>Evaluated highly confidential pre-release builds, executing deep-dive analyses on pacing, combat mechanics, and UI/UX friction points.</li>
+                        <li>Documented extensive, reproducible bug reports to optimize launch-ready states for highly anticipated unreleased titles.</li>
+                        <li>Consistently delivered actionable telemetry and balance feedback, officially certifying and ranking in the <strong>Top 0.5% of Game Testers globally</strong>.</li>
+                    </ul>
+                    <a href="https://drive.google.com/file/d/15H_27kc-1oILE9pFjiI4cthiUtGwVGYa/view" target="_blank" rel="noopener noreferrer" class="cert-btn"><i class="fa-solid fa-certificate"></i> VIEW 0.5% ELITE CERTIFICATE</a>
+                </div>
+
+                <div class="detail-card">
+                    <div class="company-header">
+                        <svg viewBox="0 0 100 120" class="svg-logo">
+                            <path d="M10,10 L90,10 L90,80 L50,110 L10,80 Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+                            <text x="50%" y="55%" text-anchor="middle" fill="currentColor" font-family="Arial, sans-serif" font-weight="900" font-size="28" letter-spacing="1">EPIC</text>
+                        </svg>
+                        <h2 class="company-name">EPIC GAMES</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item"><span class="stat-label">Duration</span><span class="stat-value">JUL 2024 - PRESENT</span></div>
+                        <div class="stat-item"><span class="stat-label">Focus Area</span><span class="stat-value">Physics & Engine Anomalies</span></div>
+                    </div>
+                    <ul class="tester-bullets">
+                        <li>Stress-tested sprawling digital environments within the Unreal ecosystem, focusing on world boundary breaks and physics engine anomalies.</li>
+                        <li>Monitored frame pacing, clipping issues, and collision detection across high-fidelity builds to ensure seamless immersion.</li>
+                        <li>Validated core mechanics and combat loops, providing direct feedback on weapon recoil patterns and fluid player movement.</li>
+                    </ul>
+                </div>
+
+                <div class="detail-card">
+                    <div class="company-header">
+                        <svg viewBox="0 0 100 100" class="svg-logo">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8"/>
+                            <rect x="25" y="35" width="16" height="6" fill="currentColor" rx="3"/>
+                            <circle cx="70" cy="38" r="7" fill="currentColor"/>
+                            <circle cx="50" cy="70" r="5" fill="currentColor"/>
+                            <circle cx="38" cy="58" r="5" fill="currentColor"/>
+                            <circle cx="62" cy="58" r="5" fill="currentColor"/>
+                        </svg>
+                        <h2 class="company-name">LIONBRIDGE GAMES</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item"><span class="stat-label">Duration</span><span class="stat-value">JUL 2024 - PRESENT</span></div>
+                        <div class="stat-item"><span class="stat-label">Focus Area</span><span class="stat-value">Linguistic QA & Localization</span></div>
+                    </div>
+                    <ul class="tester-bullets">
+                        <li>Executed rigorous linguistic Quality Assurance (LQA) and localization testing for large-scale global releases.</li>
+                        <li>Identified critical beta-stage UI overlap bugs, untranslated text string errors, and formatting breaks across multiple aspect ratios.</li>
+                        <li>Ensured seamless cross-cultural user experiences and narrative consistency, bridging the gap between original scripts and localized text.</li>
+                    </ul>
+                </div>
+
+                <div class="detail-card">
+                    <div class="company-header">
+                        <svg viewBox="0 0 120 100" class="svg-logo">
+                            <path d="M35,70 A20,20 0 0,1 35,30 A30,30 0 0,1 90,35 A20,20 0 0,1 90,70 Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M45,55 Q60,70 75,55" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                            <rect x="75" y="35" width="30" height="55" rx="5" fill="var(--bg-dark)" stroke="currentColor" stroke-width="6"/>
+                            <circle cx="90" cy="48" r="3" fill="currentColor"/>
+                        </svg>
+                        <h2 class="company-name">PLAYTESTCLOUD</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item"><span class="stat-label">Duration</span><span class="stat-value">JUL 2024 - PRESENT</span></div>
+                        <div class="stat-item"><span class="stat-label">Focus Area</span><span class="stat-value">Mobile FTUE & Onboarding</span></div>
+                    </div>
+                    <ul class="tester-bullets">
+                        <li>Conducted remote mobile playtesting with a hyper-focus on First-Time User Experiences (FTUE) and onboarding funnels.</li>
+                        <li>Provided live, think-aloud audio commentary for deep UX evaluation, detailing immediate psychological reactions to mechanics.</li>
+                        <li>Analyzed friction points in UI navigation to drastically improve new player retention rates during the critical first hour of gameplay.</li>
+                    </ul>
+                </div>
+
+                <div class="detail-card">
+                    <div class="company-header">
+                        <svg viewBox="0 0 100 100" class="svg-logo">
+                            <path d="M40,20 L60,20 L60,35 L85,75 A15,15 0 0,1 70,95 L30,95 A15,15 0 0,1 15,75 L40,35 Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+                            <rect x="32" y="8" width="36" height="12" rx="4" fill="currentColor"/>
+                            <path d="M22,75 Q50,60 78,75" fill="none" stroke="currentColor" stroke-width="5"/>
+                            <circle cx="45" cy="80" r="4" fill="currentColor"/>
+                        </svg>
+                        <h2 class="company-name">ANTIDOTE</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item"><span class="stat-label">Duration</span><span class="stat-value">JUL 2024 - PRESENT</span></div>
+                        <div class="stat-item"><span class="stat-label">Focus Area</span><span class="stat-value">AA/Indie Progression Balance</span></div>
+                    </div>
+                    <ul class="tester-bullets">
+                        <li>Participated in highly targeted, NDA-protected playtesting sessions primarily focused on innovative AA and indie titles.</li>
+                        <li>Evaluated complex UX flows and submitted detailed, structured analytical reports directly to core development teams.</li>
+                        <li>Focused heavily on balancing difficulty curves, identifying progression blockers, and ensuring late-game scaling felt rewarding.</li>
+                    </ul>
+                </div>
+
+                <div class="detail-card">
+                    <div class="company-header">
+                        <svg viewBox="0 0 100 100" class="svg-logo">
+                            <path d="M35,15 L65,15 L65,25 L85,45 L85,90 A5,5 0 0,1 80,95 L20,95 A5,5 0 0,1 15,90 L15,45 L35,25 Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/>
+                            <rect x="30" y="5" width="40" height="10" rx="3" fill="currentColor"/>
+                            <path d="M30,70 A10,10 0 0,0 40,80 L60,80 A10,10 0 0,0 70,70 L70,55 A10,10 0 0,0 30,55 Z" fill="none" stroke="currentColor" stroke-width="4"/>
+                            <circle cx="42" cy="65" r="3" fill="currentColor"/>
+                            <circle cx="58" cy="65" r="3" fill="currentColor"/>
+                        </svg>
+                        <h2 class="company-name">PLAYCOCOLA</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item"><span class="stat-label">Duration</span><span class="stat-value">JUL 2024 - PRESENT</span></div>
+                        <div class="stat-item"><span class="stat-label">Focus Area</span><span class="stat-value">Stability & Microtransactions</span></div>
+                    </div>
+                    <ul class="tester-bullets">
+                        <li>Stress-tested mobile and casual gaming environments to identify backend instability and memory leaks during extended play sessions.</li>
+                        <li>Documented precise UI/UX friction points, specifically evaluating the responsiveness of touch-based directional controls.</li>
+                        <li>Verified the integrity of core gameplay loops and microtransaction mechanics, ensuring economic fairness and functional delivery.</li>
+                    </ul>
+                </div>
+
+                <div class="youtube-box">
+                    <div class="yt-channel-header">
+                        <svg viewBox="0 0 100 100" class="yt-logo">
+                            <rect x="8" y="28" width="84" height="44" rx="12" fill="none" stroke="currentColor" stroke-width="7"/>
+                            <polygon points="42,42 42,58 58,50" fill="currentColor"/>
+                            <text x="50%" y="24" text-anchor="middle" fill="currentColor" font-family="'Bebas Neue', sans-serif" font-size="20" letter-spacing="1">21</text>
+                        </svg>
+                        <div>
+                            <h3 class="yt-channel-name">21st AVENGER</h3>
+                            <div class="yt-channel-handle">@21stAVENGER · YouTube</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 1.05rem; color: #bbb; line-height: 1.8; margin-bottom: 2rem;">
+                        My YouTube channel is where the testing actually happens on camera. It's raw, unedited gameplay footage from real sessions — the same builds, bugs, and mechanics referenced in the case studies above, documented as they happened rather than described after the fact.
+                    </p>
+                    <div class="yt-feature-grid">
+                        <div class="yt-feature">
+                            <i class="fa-solid fa-bug"></i>
+                            <div class="yt-feature-title">Bug Walkthroughs</div>
+                            <div class="yt-feature-desc">Screen-recorded reproductions of issues found during testing sessions.</div>
+                        </div>
+                        <div class="yt-feature">
+                            <i class="fa-solid fa-gamepad"></i>
+                            <div class="yt-feature-title">Live Gameplay</div>
+                            <div class="yt-feature-desc">Unedited playtesting footage across AAA, AA, and indie titles.</div>
+                        </div>
+                        <div class="yt-feature">
+                            <i class="fa-solid fa-microphone"></i>
+                            <div class="yt-feature-title">Think-Aloud Commentary</div>
+                            <div class="yt-feature-desc">Real-time reactions and feedback captured mid-session.</div>
+                        </div>
+                    </div>
+                    <a href="https://youtube.com/@21stavenger?si=beEv3FAN-yB0sUoa" target="_blank" rel="noopener noreferrer" class="cert-btn">
+                        <i class="fa-brands fa-youtube"></i> WATCH MY GAMEPLAY PROOF
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: TRAVEL SALES CONSULTANT (TRAVELOCAT) -->
+    <div id="travel-modal" class="project-modal">
+        <button class="close-btn" onclick="closeModal('travel-modal')"><i class="fa-solid fa-xmark"></i> CLOSE ARCHIVE</button>
+        
+        <div class="modal-inner">
+            <header class="modal-hero">
+                <h1 class="modal-title">TRAVEL SALES CONSULTANT</h1>
+                <p class="modal-tagline">Travelocat Agency // June 2026 – August 2026 // Commercial Operations & Client Conversion</p>
+            </header>
+
+            <div class="project-core-summary">
+                <h2 class="core-summary-title">THE COMMERCIAL ARCHITECTURE OF SALES</h2>
+                <p class="core-summary-text">
+                    Operating inside <strong>Travelocat</strong> demanded rapid client qualification, real-time schedule conflict resolution, and high-conversion itinerary packaging. Managing domestic and international travel logistics provided foundational mastery over operational pressure, customer psychology, and fast-paced objections handling.
+                </p>
+                <div class="core-pillars">
+                    <div class="pillar-item">
+                        <span class="pillar-label">01 // CONVERSION PSYCHOLOGY</span>
+                        <span class="pillar-desc">Structuring dynamic pitches tailored to diverse budgets, travelers, and tight timelines.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">02 // CLIENT RELATION ENGINE</span>
+                        <span class="pillar-desc">Maintaining full transparency and fast communication across booking cycles.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">03 // CONTINGENCY MANAGEMENT</span>
+                        <span class="pillar-desc">Resolving cancellations, transit delays, and lodging switches under live pressure.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-stack">
+                <div class="detail-card">
+                    <div class="company-header">
+                        <i class="fa-solid fa-compass" style="font-size: 3rem; color: var(--accent-red);"></i>
+                        <h2 class="company-name">TRAVELOCAT AGENCY</h2>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Tenure</span>
+                            <span class="stat-value">JUN 2026 - AUG 2026</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Role Focus</span>
+                            <span class="stat-value">End-to-End Itinerary Consulting</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Operational Core</span>
+                            <span class="stat-value">High-Pressure Communication</span>
+                        </div>
+                    </div>
+
+                    <ul class="tester-bullets">
+                        <li>Delivered customized, cost-optimized commercial travel packages for diverse individual and group clients, maximizing satisfaction and repeat retention.</li>
+                        <li>Handled high-volume inbound inquiries, negotiating vendor margins with airlines, boutique hotels, and regional ground-transport coordinators.</li>
+                        <li>Spearheaded rapid conflict resolution during flight delays, rescheduling emergencies, and seasonal itinerary disruptions with calm, methodical professionalism.</li>
+                        <li>Directly synthesized on-the-ground client handling experiences into subsequent level design and narrative roadmapping projects.</li>
+                    </ul>
+                    
+                    <div style="margin-top: 2rem;">
+                        <a href="https://www.polarsteps.com/TheDevil2123" target="_blank" rel="noopener noreferrer" class="cert-btn">
+                            <i class="fa-solid fa-map-location-dot"></i> VIEW TRAVEL EXPEDITIONS ON POLARSTEPS
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: eSPORTS ATHLETE (CODM) -->
+    <div id="esports-modal" class="project-modal">
+        <button class="close-btn" onclick="closeModal('esports-modal')"><i class="fa-solid fa-xmark"></i> CLOSE ARCHIVE</button>
+        
+        <div class="modal-inner">
+            <header class="modal-hero">
+                <h1 class="modal-title">eSPORTS ATHLETE // CALL OF DUTY: MOBILE</h1>
+                <p class="modal-tagline">6 Years in the Trenches // 2+ Years Competitive Pro Circuit // In-Game Leader & Entry Fragger</p>
+            </header>
+
+            <div class="project-core-summary">
+                <h2 class="core-summary-title">THE COMPETITIVE MINDSET & BATTLE RECORD</h2>
+                <p class="core-summary-text">
+                    From early closed beta access to tournament lobbies, six continuous years of <strong>Call of Duty: Mobile</strong> has forged deep spatial instincts, instantaneous Time-To-Kill (TTK) awareness, and team shot-calling capability. Competing at this tier requires uncompromising mechanical execution, dynamic spawn-blocking strategies, and extreme psychological composure.
+                </p>
+                <div class="core-pillars">
+                    <div class="pillar-item">
+                        <span class="pillar-label">01 // DYNAMIC SPAWN TRAPPING</span>
+                        <span class="pillar-desc">Predictive enemy routing and anchor positioning across Hardpoint and Search & Destroy.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">02 // IN-GAME LEADERSHIP (IGL)</span>
+                        <span class="pillar-desc">Real-time macro rotation calls and objective control during intense tournament deficits.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">03 // META DISSECTION</span>
+                        <span class="pillar-desc">Weapon stat extraction, gunsmith tuning, and movement-centering calibration.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-stack">
+                <div class="esports-banner">
+                    <img src="/mythic ghost.jpg" alt="CODM Operator Banner" class="banner-img" onerror="this.src='https://www.callofduty.com/content/dam/atvi/callofduty/cod-touchui/blog/hero/codm/CODM-MYTHIC-GHOST-TOUT.jpg'">
+                </div>
+
+                <div class="stats-bar">
+                    <div class="stat-box">
+                        <h3>06</h3>
+                        <p>Years Active (Since Beta)</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>02+</h3>
+                        <p>Years Pro Circuit</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>TOP</h3>
+                        <p>Competitive Tier</p>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="pro-circuit-row">
+                        <div class="pro-circuit-img-wrapper">
+                            <img src="/ghost pfp.jpg" alt="CODM Pro Circuit" class="circuit-img" onerror="this.src='https://static1.srcdn.com/wordpress/wp-content/uploads/2023/07/homelander-in-call-of-duty.jpg'">
+                        </div>
+                        <div class="pro-circuit-text">
+                            <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; color: var(--accent-orange); margin-bottom: 1rem;">BUILT IN THE BETA. FORGED IN TOURNAMENTS.</h2>
+                            <p style="color: #bbb; line-height: 1.8; font-size: 1rem; margin-bottom: 1.2rem;">
+                                My journey with Call of Duty: Mobile started long before the official global launch, diving straight into the initial closed beta builds. Over the last 6 years, that early familiarity transformed into deep mechanical mastery, map intuition, and advanced spatial awareness.
+                            </p>
+                            <p style="color: #bbb; line-height: 1.8; font-size: 1rem;">
+                                For over 2 years, I have competed actively within the professional eSports circuit. Operating at this elite level demands an absolute intolerance for error, flawless team communication, and an analytical breakdown of enemy economy, routing, and spawn manipulation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3 style="font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--text-cream); margin-top: 2rem; margin-bottom: 1rem;">TACTICAL COMPETENCIES</h3>
+                    
+                    <div class="competency-grid">
+                        <div class="comp-card">
+                            <div class="comp-num">01</div>
+                            <h3>IN-GAME LEADERSHIP (IGL)</h3>
+                            <p>Calling high-pressure rotations, orchestrating objective site takes, and maintaining psychological composure when trailing in tournament brackets.</p>
+                        </div>
+                        <div class="comp-card">
+                            <div class="comp-num">02</div>
+                            <h3>SPAWN TRAPPING & ALGORITHMS</h3>
+                            <p>Mastery of CODM's dynamic spawn mechanics across all competitive maps to choke enemy progression and bleed out enemy map control.</p>
+                        </div>
+                        <div class="comp-card">
+                            <div class="comp-num">03</div>
+                            <h3>AGGRESSIVE ENTRY FRAGGING</h3>
+                            <p>Utilizing high-speed movement and centering mechanics to break open entrenched defensive setups in Hardpoint and Search & Destroy.</p>
+                        </div>
+                        <div class="comp-card">
+                            <div class="comp-num">04</div>
+                            <h3>META DISSECTION</h3>
+                            <p>Constantly analyzing weapon balancing, Time-to-Kill (TTK) parameters, and attachment loadouts to extract every fractional performance advantage.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CREATIVE WORKING & FREELANCE STUDIO -->
+    <div id="creative-modal" class="project-modal">
+        <button class="close-btn" onclick="closeModal('creative-modal')"><i class="fa-solid fa-xmark"></i> CLOSE ARCHIVE</button>
+        
+        <div class="modal-inner">
+            <header class="modal-hero">
+                <h1 class="modal-title">CREATIVE WORK & FREELANCE STUDIO</h1>
+                <p class="modal-tagline">2+ Years Freelance Mastery // Game Design Documents // Social Media Strategy & Creative Direction</p>
+            </header>
+
+            <div class="project-core-summary">
+                <h2 class="core-summary-title">THE INTEGRATED CREATIVE ENGINE</h2>
+                <p class="core-summary-text">
+                    Creative execution without analytical structure falls flat; technical systems without authentic narrative feel lifeless. Over <strong>2 years of independent freelancing</strong>, this practice has unified <strong>game story design, comprehensive GDD structuring, organic social media growth, and multi-platform content writing</strong>. From drafting dark fantasy lore bibles inspired by <em>Berserk</em> to calibrating algorithm-driven YouTube SEO for viral releases, every campaign bridges artistic vision with hard retention metrics.
+                </p>
+                <div class="core-pillars">
+                    <div class="pillar-item">
+                        <span class="pillar-label">01 // GDD & NARRATIVE ARCHITECTURE</span>
+                        <span class="pillar-desc">Designing systems documents, branching psychological choices, and world lore bibles.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">02 // ALGORITHMIC AUDIENCE RETENTION</span>
+                        <span class="pillar-desc">High-CTR metadata optimization, title calibration, and pacing for viral gaming channels.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">03 // COPYWRITING & DIGITAL VOICE</span>
+                        <span class="pillar-desc">Crafting tailored commercial copy, press releases, and brand identities with high conversion.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-stack">
+                
+                <div class="creative-pillar-grid">
+                    <div class="creative-pillar-card">
+                        <i class="fa-solid fa-keyboard creative-icon"></i>
+                        <h3 class="creative-card-title">CONTENT WRITING</h3>
+                        <p class="creative-card-desc">
+                            Authored long-form articles, analytical game reviews, website copy, and scripts tailored for gaming, tech, and entertainment niches. Focused on punchy cadence, reader retention, and search engine discoverability.
+                        </p>
+                    </div>
+
+                    <div class="creative-pillar-card">
+                        <i class="fa-solid fa-gamepad creative-icon"></i>
+                        <h3 class="creative-card-title">GAME DESIGNING</h3>
+                        <p class="creative-card-desc">
+                            Authored complete Game Design Documents (GDD) covering core loops, mechanics balance, HUD wireframing, and branching narrative trees. 
+                            <br><br>
+                            <a href="#" onclick="closeModal('creative-modal'); openProject('kuldhara-modal')" style="color: var(--accent-red); text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 5px;">
+                                VIEW SHADOWS OF KULDHARA <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </p>
+                    </div>
+
+                    <div class="creative-pillar-card">
+                        <i class="fa-solid fa-share-nodes creative-icon"></i>
+                        <h3 class="creative-card-title">SOCIAL MEDIA HANDLING</h3>
+                        <p class="creative-card-desc">
+                            Managed content distribution pipelines across YouTube, Instagram, and Discord communities. Handled social media presence for competitive eSports organizations, driving community engagement and brand growth. Also actively featured in commercial travel campaigns.
+                        </p>
+                    </div>
+
+                    <div class="creative-pillar-card">
+                        <i class="fa-solid fa-wand-magic-sparkles creative-icon"></i>
+                        <h3 class="creative-card-title">CREATIVE DIRECTION</h3>
+                        <p class="creative-card-desc">
+                            Directed visual aesthetics, mood boards, and conceptual scripts heavily influenced by dark graphic novels. Bridged multimedia production across Blender 3D modeling, Photoshop compositing, and video editing.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">SOCIAL MEDIA & CREATIVE CAMPAIGNS</h2>
+                    <p class="detail-text">A showcase of managed social media presence, competitive organizational branding, and featured campaign collaborations.</p>
+                    
+                    <h3 style="color: var(--accent-purple); font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">eSPORTS ORGANIZATION MANAGEMENT</h3>
+                    <p class="detail-text" style="margin-bottom: 1.5rem;">
+                        Spearheaded the complete digital presence for a competitive eSports organization. Directed content strategy, produced high-octane gameplay highlights, tournament announcement graphics, and player spotlight reels. Leveraged algorithmic trends to exponentially increase community engagement, foster brand loyalty, and establish a dominant, recognizable voice within the competitive mobile gaming scene.
+                    </p>
+
+                    <h3 style="color: var(--accent-red); font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; margin-top: 2rem; margin-bottom: 0.5rem;">FEATURED IN TRAVELOCAT CAMPAIGNS</h3>
+                    <p class="detail-text" style="margin-bottom: 1rem;">
+                        Actively featured as the commercial face for Travelocat's digital marketing campaigns. These promotional reels highlight curated travel itineraries, premium destination spotlights, and engaging commercial pitches—designed to convert viewers into clients while maintaining a high-energy, relatable on-screen presence.
+                    </p>
+                    <ul class="tester-bullets">
+                        <li><a href="https://www.instagram.com/reel/DZhZtyJxsKB/?stkn=ZjFkYzMzMDQzZg==" target="_blank" style="color: var(--text-cream); text-decoration: underline;">Travelocat Feature Reel 1 - Watch on Instagram <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.8rem; margin-left: 5px;"></i></a></li>
+                        <li><a href="https://www.instagram.com/reel/DaIFiANxIQy/?stkn=ZjFkYzMzMDQzZg==" target="_blank" style="color: var(--text-cream); text-decoration: underline;">Travelocat Feature Reel 2 - Watch on Instagram <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.8rem; margin-left: 5px;"></i></a></li>
+                        <li><a href="https://www.instagram.com/reel/DaZrTrJT1wp/?stkn=ZjFkYzMzMDQzZg==" target="_blank" style="color: var(--text-cream); text-decoration: underline;">Travelocat Feature Reel 3 - Watch on Instagram <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.8rem; margin-left: 5px;"></i></a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: SHADOWS OF KULDHARA (From Projects) -->
+    <div id="kuldhara-modal" class="project-modal">
+        <button class="close-btn" onclick="closeProject('kuldhara-modal')"><i class="fa-solid fa-xmark"></i> CLOSE ARCHIVE</button>
+        <div class="modal-inner">
+            <header class="modal-hero">
+                <h1 class="modal-title">SHADOWS OF KULDHARA</h1>
+                <p class="modal-tagline">Lead Narrative Design & Comprehensive Game Design Document (GDD)</p>
+            </header>
+
+            <div class="project-core-summary">
+                <h2 class="core-summary-title">THE CORE PILLARS OF KULDHARA</h2>
+                <p class="core-summary-text">
+                    <strong>Shadows of Kuldhara</strong> is structured around an uncompromising psychological morality engine where the player's internal state directly mutates both combat mechanics and narrative reality. Rather than simple branching dialogue trees, the core architecture balances two opposing subconscious forces: the <strong>Mother Hallucination</strong> (a path of discipline, non-lethal precision, stealth, and moral redemption) versus the <strong>Brother Hallucination</strong> (an intoxicating spiral of relentless fury, heavy greatsword brutality, and scorched-earth vengeance). Every assassination target and environmental encounter acts as a testing ground for Dev's fractured psyche, directly dictating boss fight resolutions, environmental reactivity, and the ultimate fate of Kuldhara.
+                </p>
+                <div class="core-pillars">
+                    <div class="pillar-item">
+                        <span class="pillar-label">01 // PSYCHOLOGICAL DUALITY</span>
+                        <span class="pillar-desc">Real-time hallucination debates altering audio/visual perception and moral branching.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">02 // ADAPTIVE ARSENAL</span>
+                        <span class="pillar-desc">Dual light daggers & bow mechanics shifting into a heavy execution greatsword.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">03 // BOSS REACTION LOGIC</span>
+                        <span class="pillar-desc">Encounter outcomes (disarm vs. execute) that permanently reshape village factions.</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2.5rem; border-top: 1px dashed rgba(217, 22, 22, 0.3); padding-top: 2rem; text-align: center;">
+                    <a href="https://drive.google.com/file/d/1NHSrl7Lt4BrGn6yjebXKAIiJTpRAyF76/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="cert-btn">
+                        <i class="fa-solid fa-file-pdf"></i> READ THE FULL GAME DESIGN DOCUMENT (GDD)
+                    </a>
+                </div>
+            </div>
+
+            <div class="detail-stack">
+                <div class="detail-card">
+                    <h2 class="detail-heading">01. PROTAGONIST EVOLUTION: MOTHER'S VERSION</h2>
+                    <p class="detail-text">Dev evolves from a messy, inexperienced killer into a highly skilled assassin. Under this progression, Dev features a clean, hopeful appearance wearing light clothing and soft facial features. He utilizes dual light blades and a hunting bow, encouraging stealth-based, precise combat strategies. Backed by the Mother hallucination, his animations are calm and grounded.</p>
+                    <div class="sketch-container"><img src="/mother's path.png" alt="Dev Mother Progression Concept" class="sketch-image" onerror="this.src='./images/mothers-path.png'"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/mothers-path.png</code></div></div>
+                </div>
+                <div class="detail-card">
+                    <h2 class="detail-heading">02. PROTAGONIST EVOLUTION: BROTHER'S VERSION</h2>
+                    <p class="detail-text">Driven by rage and the Brother hallucination, Dev transforms into a dark, menacing figure with a blood-stained hooded cape and fierce Guts-inspired facial features. Armed with a massive greatsword, his combat style, aggressive animations, and audio cues reflect a monstrous state.</p>
+                    <div class="sketch-container"><img src="/brother's path.png" alt="Dev Brother Progression Concept" class="sketch-image" onerror="this.src='./images/brothers-path.png'"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/brothers-path.png</code></div></div>
+                </div>
+                <div class="detail-card">
+                    <h2 class="detail-heading">03. SUPPORTING CHARACTER: ANAYA</h2>
+                    <p class="detail-text">Anaya serves as the priest's daughter and Dev's emotional foil during transitional sequences. She provides limited cooperation and acts as a narrative anchor, shifting perspective and deepening emotional tension throughout Dev's journey.</p>
+                    <div class="sketch-container"><img src="/Anaya.png" alt="Anaya Character Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/anaya_concept.png</code></div></div>
+                </div>
+                <div class="detail-card">
+                    <h2 class="detail-heading">04. INTERNAL DYNAMICS: HALLUCINATIONS</h2>
+                    <p class="detail-text">Mother & Brother act as dynamic dual hallucinations representing moral polarity. They directly guide Dev's actions, alter visual and audio presentation, and debate in Dev's mind to give players insight into his psychological conflict.</p>
+                    <div class="sketch-container"><img src="/hallucinations.png" alt="Hallucination Manifestations" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/hallucinations.png</code></div></div>
+                </div>
+                <div class="detail-card">
+                    <h2 class="detail-heading">05. TARGET ARCHETYPE: THE GATEKEEPER</h2>
+                    <p class="detail-text">Encountered on the outskirts of Kuldhara, the Gatekeeper serves as the initial combat challenge for Dev. Designed to introduce basic stealth and silent assassination mechanics.</p>
+                    <div class="sketch-container"><img src="/Gatekeeper.png" alt="The Gatekeeper Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/gatekeeper.png</code></div></div>
+                </div>
+                <div class="detail-card">
+                    <h2 class="detail-heading">06. TARGET ARCHETYPE: THE HUNTER</h2>
+                    <p class="detail-text">Deep within the forest tracking routes, the Hunter tests Dev's core stealth and environmental tracking abilities, learning trap evasion and advanced traversal movement.</p>
+                    <div class="sketch-container"><img src="/Hunter.png" alt="The Hunter Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/hunter.png</code></div></div>
+                </div>
+                <div class="detail-card">
+                    <h2 class="detail-heading">07. TARGET ARCHETYPE: THE BLACKSMITH</h2>
+                    <p class="detail-text">Encountered in the Forge area, the Blacksmith serves as a major environmental boss fight that directly dictates player moral divergence: spare him under Mother Path or claim his greatsword under Brother Path.</p>
+                    <div class="sketch-container"><img src="/Blacksmith.png" alt="The Blacksmith Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/blacksmith.png</code></div></div>
+                </div>
+                <div class="detail-card">
+                    <h2 class="detail-heading">08. TARGET ARCHETYPE: THE WITCH WOMAN</h2>
+                    <p class="detail-text">Stationed within an illusion-heavy environment filled with spatial traps and sanity-challenging hazards, manipulating navigation feedback.</p>
+                    <div class="sketch-container"><img src="/witch.png" alt="The Witch Woman Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/witch.png</code></div></div>
+                </div>
+                <div class="detail-card">
+                    <h2 class="detail-heading">09. TARGET ARCHETYPE: THE VILLAGE GENERAL</h2>
+                    <p class="detail-text">A tactical challenge incorporating enemy patrols, wave reinforcements, and lethal environmental hazards requiring complete weapon mastery.</p>
+                    <div class="sketch-container"><img src="/General.png" alt="The Village General Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/general.png</code></div></div>
+                </div>
+                <div class="detail-card">
+                    <h2 class="detail-heading">10. FINAL BOSS: THE PRIEST</h2>
+                    <p class="detail-text">The ultimate mastermind behind Kuldhara's brutal traditions. Confrontation branches based on accumulated morality: Mother Ending (sparing the priest) or Brother Ending (total execution).</p>
+                    <div class="sketch-container"><img src="/Priest.png" alt="The Priest Final Boss Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/priest.png</code></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 6: ABSOLUTE CINEMA DETAIL -->
+    <div id="cinema-modal" class="project-modal">
+        <button class="close-btn" onclick="closeProject('cinema-modal')"><i class="fa-solid fa-xmark"></i> CLOSE ARCHIVE</button>
+        
+        <div class="modal-inner">
+            <header class="modal-hero">
+                <h1 class="modal-title">ABSOLUTE CINEMA</h1>
+                <p class="modal-tagline">Multi-Service Media Ecosystem // Cross-API Architecture & Entertainment Hub</p>
+            </header>
+
+            <div class="project-core-summary">
+                <h2 class="core-summary-title">THE ARCHITECTURAL ENGINE OF ABSOLUTE CINEMA</h2>
+                <p class="core-summary-text">
+                    <strong>Absolute Cinema</strong> is a unified, cross-platform media tracker, discovery engine, and peer-to-peer marketplace engineered to solve fragmented entertainment consumption. By interconnecting multiple industry APIs—including <strong>TMDB, Trakt.tv, OMDb, RAWG, Google Books, ComicVine, Jikan (MyAnimeList), and MovieGlu</strong>—the platform creates a continuous, high-performance ecosystem.
+                </p>
+                <div class="core-pillars">
+                    <div class="pillar-item">
+                        <span class="pillar-label">01 // MULTI-API INTEGRATION</span>
+                        <span class="pillar-desc">Unified metadata parsing across 8+ specialized global media and gaming APIs.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">02 // CLIENT-SIDE PERSISTENCE</span>
+                        <span class="pillar-desc">Custom local database synchronizing watchlists, reading pages, and reviews.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">03 // MARKETPLACE & SCHEDULING</span>
+                        <span class="pillar-desc">Full 4-step ticket listing wizard and dynamic month-view release matrix.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-stack">
+                <div class="detail-card">
+                    <h2 class="detail-heading">01. MASTER PRODUCTION REEL</h2>
+                    <p class="detail-text">The primary cinematic sequence engineered around relentless rhythmic cuts and synchronized audio beats. Showcases the technical execution, pacing, and visual language that powers the entire Absolute Cinema web experience.</p>
+                    <div class="video-wrapper">
+                        <iframe src="https://www.youtube-nocookie.com/embed/rTDmtfthcmU" title="Absolute Cinema Showcase" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                    <div class="action-bar">
+                        <span style="font-size: 0.85rem; color: #888;">ORIGINAL RELEASE // ULTRA HD 60FPS</span>
+                        <a href="https://youtu.be/rTDmtfthcmU" target="_blank" rel="noopener noreferrer" class="btn-link"><i class="fa-brands fa-youtube"></i> LAUNCH YOUTUBE</a>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">02. INDEX.HTML // HOME HUB & GLOBAL DISCOVERY</h2>
+                    <p class="detail-text">The flagship entrance to Absolute Cinema featuring full-viewport cinematic hero branding, a unified universal dark-blue sidebar navigation, and a debounced cross-category search engine.</p>
+                    <div class="sketch-container">
+                        <img src="./images/index_page.png" alt="Absolute Cinema Home Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000'">
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">03. MOVIES.HTML // TRAKT + TMDB HYBRID EXPLORER</h2>
+                    <p class="detail-text">A dual-API movie discovery dashboard merging Trakt.tv trending, most-anticipated, and box office metrics with TMDB's rich metadata and genre discovery.</p>
+                    <div class="sketch-container">
+                        <img src="./images/movies_page.png" alt="Absolute Cinema Movies Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1000'">
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">04. SHOWS.HTML // WEB SERIES & ANIME PROGRESSION ENGINE</h2>
+                    <p class="detail-text">A media browser built with a multi-API tab slider spanning live-action web series (TMDB), western animation/cartoons, and anime via Jikan/MyAnimeList with episode tracking.</p>
+                    <div class="sketch-container">
+                        <img src="./images/shows_page.png" alt="Absolute Cinema Shows Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=1000'">
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">05. BOOKS.HTML // LITERATURE, COMICS & MANGA ARCHIVE</h2>
+                    <p class="detail-text">A tri-platform library engine integrating Google Books, ComicVine, and Jikan with a bulletproof queue and page-by-page progress trackers.</p>
+                    <div class="sketch-container">
+                        <img src="./images/books_page.png" alt="Absolute Cinema Books Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1000'">
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">06. GAMES.HTML // RAWG-POWERED GAMING DATABASE</h2>
+                    <p class="detail-text">A high-performance gaming archive synced directly to RAWG featuring platform compatibility badges, HD gameplay trailers, and developer-team inspection modals.</p>
+                    <div class="sketch-container">
+                        <img src="./images/games_page.png" alt="Absolute Cinema Games Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1000'">
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">07. TICKET RESELLING.HTML // P2P CINEMA TICKET MARKETPLACE</h2>
+                    <p class="detail-text">An end-to-end peer-to-peer cinema ticket marketplace with a 4-step listing wizard and an interactive seat map engine allowing users to select rows and seats.</p>
+                    <div class="sketch-container">
+                        <img src="./images/ticket_reselling_page.png" alt="Absolute Cinema Ticket Reselling Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1000'">
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">08. CALENDER.HTML // ETERNAL RELEASE MATRIX & PLANNER</h2>
+                    <p class="detail-text">A synchronized release planner that aggregates theatrical debuts, weekly series drops, and global game launches into a month matrix with projection algorithms.</p>
+                    <div class="sketch-container">
+                        <img src="./images/calendar_page.png" alt="Absolute Cinema Calendar Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1000'">
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">09. PROFILE.HTML // USER LIBRARY & PARTITIONED STORAGE</h2>
+                    <p class="detail-text">A centralized personal dashboard structured with an interactive folder system categorizing local storage bookmarks across all media formats.</p>
+                    <div class="sketch-container">
+                        <img src="./images/profile_page.png" alt="Absolute Cinema Profile Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1000'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 7: PHOTO EDITS -->
+    <div id="dtp-modal" class="project-modal">
+        <button class="close-btn" onclick="closeProject('dtp-modal')"><i class="fa-solid fa-xmark"></i> CLOSE ARCHIVE</button>
+        
+        <div class="modal-inner">
+            <header class="modal-hero">
+                <h1 class="modal-title">PHOTO EDITS</h1>
+                <p class="modal-tagline">Graphic Design Portfolio // High-Impact Compositing, Typography & Print Design</p>
+            </header>
+
+            <div class="project-core-summary">
+                <h2 class="core-summary-title">THE DESIGN & PUBLISHING METHODOLOGY</h2>
+                <p class="core-summary-text">
+                    This suite represents a comprehensive collection of <strong>desktop publishing (DTP), typography composition, and digital raster manipulation</strong>. Built with precision Adobe Creative Cloud pipelines (Photoshop, InDesign, Illustrator), projects focus on layout balance, contrast calibration, visual hierarchy, and matte digital manipulation for both print media and screen-first marketing assets.
+                </p>
+                <div class="core-pillars">
+                    <div class="pillar-item">
+                        <span class="pillar-label">01 // VISUAL HIERARCHY</span>
+                        <span class="pillar-desc">Strict grid-based typography pacing that leads the viewer's eye to high-priority focal points.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">02 // DIGITAL COMPOSITING</span>
+                        <span class="pillar-desc">Multi-layered photo manipulation, color grading, shadows, and gritty high-contrast texturing.</span>
+                    </div>
+                    <div class="pillar-item">
+                        <span class="pillar-label">03 // PRODUCTION-READY PRINT</span>
+                        <span class="pillar-desc">Color profile calibration (CMYK/RGB), bleed tolerances, and vector-raster hybridization.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-stack">
+                
+                <div class="detail-card">
+                    <h2 class="detail-heading">01. EDITORIAL & POSTER COMPOSITIONS</h2>
+                    <p class="detail-text">
+                        Curated collection of high-resolution digital manipulations, conceptual posters, and modern brand collaterals crafted with advanced masking and lighting techniques.
+                    </p>
+                    <div class="sketch-container">
+                        <img src="/image.png" alt="Desktop Publishing Showcase 1" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1000'">
+                        <div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/image.png</code></div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">02. TYPOGRAPHY & LAYOUT BLUEPRINTS</h2>
+                    <p class="detail-text">
+                        Print and desktop publication spreads demonstrating modular grid systems, whitespace management, and customized headline styling.
+                    </p>
+                    <div class="sketch-container">
+                        <img src="/Picsart_24-10-23_02-06-45-830.png" alt="Desktop Publishing Showcase 2" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1000'">
+                        <div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/Picsart_24-10-23_02-06-45-830.png</code></div>
+                    </div>
+
+                    <div class="action-bar">
+                        <span style="font-size: 0.85rem; color: #888;">GITHUB REPOSITORY SOURCE // OPEN REPO</span>
+                        <a href="https://github.com/Devesh-b-sr/Desktop-Publishing-Project" target="_blank" rel="noopener noreferrer" class="btn-link">
+                            <i class="fa-brands fa-github"></i> VIEW GITHUB REPOSITORY
+                        </a>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2 class="detail-heading">03. BRAND IDENTITY & DIGITAL COMPOSITING</h2>
+                    <p class="detail-text">
+                        Advanced environment augmentation, recoloring, and atmospheric depth enhancements applied to standard photography to create striking visual brand assets.
+                    </p>
+                    <div class="sketch-container">
+                        <img src="/Post.jpeg" alt="Desktop Publishing Showcase 3" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1558655146-d09347e92766?w=1000'">
+                        <div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/dtp_showcase_3.jpg</code></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cursor = document.getElementById('global-cursor');
+        
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mouseover', e => {
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || 
+                e.target.closest('.custom-card') || e.target.closest('.project-card') || 
+                e.target.closest('.exp-card') || e.target.closest('.contact-card') || 
+                e.target.closest('.close-btn') || e.target.closest('.nav-brand') || 
+                e.target.closest('.avatar-frame')) {
+                document.body.classList.add('hovering');
+            } else {
+                document.body.classList.remove('hovering');
+            }
+        });
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            
+            const targetPage = document.getElementById(pageId);
+            if(targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            if(pageId === 'page-home') document.getElementById('link-home').classList.add('active');
+            if(pageId === 'page-experience') document.getElementById('link-experience').classList.add('active');
+            if(pageId === 'page-projects') document.getElementById('link-projects').classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('open');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function openProject(modalId) { openModal(modalId); }
+
+        function closeProject(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('open');
+                document.body.style.overflow = 'auto';
+
+                const iframes = modal.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    const src = iframe.src;
+                    iframe.src = src;
+                });
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('project-modal')) {
+                closeModal(event.target.id);
+                closeProject(event.target.id);
+            }
+        };
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.project-modal.open').forEach(modal => {
+                    closeModal(modal.id);
+                    closeProject(modal.id);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
