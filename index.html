@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devesh AKA Devil</title>
     
-    <link rel="icon" type="image/png" href="/logo.jpg">
+    <link rel="icon" type="image/jpeg" href="./logo.jpg">
     
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -286,10 +286,10 @@
         .exp-card::before, .project-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--accent-red); opacity: 0; transition: opacity 0.3s ease; z-index: 5; }
         .exp-card:hover::before, .project-card:hover::before { opacity: 1; }
         
-        .card-thumb-wrap { width: 100%; min-height: 260px; display: flex; align-items: center; justify-content: center; position: relative; background: #020202; padding: 1.5rem; border-bottom: 1px solid var(--grid-line); }
+        .card-thumb-wrap { width: 100%; min-height: 260px; display: flex; align-items: center; justify-content: center; position: relative; background: #020202; padding: 1.5rem; border-bottom: 1px solid var(--grid-line); overflow: hidden; }
         .card-thumb { max-width: 100%; height: auto; max-height: 260px; object-fit: contain; filter: contrast(1.05); transition: transform 0.4s ease; }
         .exp-card:hover .card-thumb, .project-card:hover .card-thumb { transform: scale(1.03); }
-        .card-footer-info { padding: 2rem; display: flex; justify-content: space-between; align-items: center; background: #111111; flex-grow: 1; }
+        .card-footer-info { padding: 2rem; display: flex; justify-content: space-between; align-items: center; background: #111111; flex-grow: 1; z-index: 2; }
         .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--text-cream); letter-spacing: 1.5px; line-height: 1.1; }
         .card-badge { font-size: 0.8rem; color: var(--accent-red); letter-spacing: 1px; text-transform: uppercase; margin-top: 0.4rem; }
         .expand-prompt { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: #888; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; transition: color 0.3s ease; white-space: nowrap; margin-left: 1rem; }
@@ -752,7 +752,7 @@
                 
                 <div class="project-card" onclick="openProject('kuldhara-modal')">
                     <div class="card-thumb-wrap">
-                        <img src="/brother's path.png" alt="Shadows of Kuldhara" class="card-thumb" onerror="this.src='./images/brothers-path.png'">
+                        <img src="./brother's path.png" alt="Shadows of Kuldhara" class="card-thumb">
                     </div>
                     <div class="card-footer-info">
                         <div>
@@ -767,7 +767,7 @@
 
                 <div class="project-card" onclick="openProject('cinema-modal')">
                     <div class="card-thumb-wrap">
-                        <img src="./images/absolute_cinema_thumb.jpg" alt="Absolute Cinema" class="card-thumb" onerror="this.src='https://img.youtube.com/vi/rTDmtfthcmU/maxresdefault.jpg'">
+                        <img src="./absolute_cinema_thumb.jpg" alt="Absolute Cinema" class="card-thumb">
                     </div>
                     <div class="card-footer-info">
                         <div>
@@ -782,7 +782,7 @@
 
                 <div class="project-card" onclick="openProject('dtp-modal')">
                     <div class="card-thumb-wrap">
-                        <img src="./images/dtp_thumb.png" alt="Desktop Publishing Project" class="card-thumb" onerror="this.src='https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600'">
+                        <img src="./dtp_thumb.png" alt="Desktop Publishing Project" class="card-thumb">
                     </div>
                     <div class="card-footer-info">
                         <div>
@@ -803,7 +803,6 @@
          MODALS (POPUP WINDOWS FOR EXPERIENCES & PROJECTS)
          =================================================================== -->
     
-    <!-- MODAL 1: GAME TESTING DEPLOYMENTS -->
     <div id="qa-modal" class="project-modal">
         <button class="close-btn" onclick="closeModal('qa-modal')"><i class="fa-solid fa-xmark"></i> CLOSE ARCHIVE</button>
         
@@ -1106,7 +1105,7 @@
 
             <div class="detail-stack">
                 <div class="esports-banner">
-                    <img src="/mythic ghost.jpg" alt="CODM Operator Banner" class="banner-img" onerror="this.src='https://www.callofduty.com/content/dam/atvi/callofduty/cod-touchui/blog/hero/codm/CODM-MYTHIC-GHOST-TOUT.jpg'">
+                    <img src="./mythic ghost.jpg" alt="CODM Operator Banner" class="banner-img">
                 </div>
 
                 <div class="stats-bar">
@@ -1127,7 +1126,7 @@
                 <div class="detail-card">
                     <div class="pro-circuit-row">
                         <div class="pro-circuit-img-wrapper">
-                            <img src="/ghost pfp.jpg" alt="CODM Pro Circuit" class="circuit-img" onerror="this.src='https://static1.srcdn.com/wordpress/wp-content/uploads/2023/07/homelander-in-call-of-duty.jpg'">
+                            <img src="./ghost pfp.jpg" alt="CODM Pro Circuit" class="circuit-img">
                         </div>
                         <div class="pro-circuit-text">
                             <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; color: var(--accent-orange); margin-bottom: 1rem;">BUILT IN THE BETA. FORGED IN TOURNAMENTS.</h2>
@@ -1304,52 +1303,52 @@
                 <div class="detail-card">
                     <h2 class="detail-heading">01. PROTAGONIST EVOLUTION: MOTHER'S VERSION</h2>
                     <p class="detail-text">Dev evolves from a messy, inexperienced killer into a highly skilled assassin. Under this progression, Dev features a clean, hopeful appearance wearing light clothing and soft facial features. He utilizes dual light blades and a hunting bow, encouraging stealth-based, precise combat strategies. Backed by the Mother hallucination, his animations are calm and grounded.</p>
-                    <div class="sketch-container"><img src="/mother's path.png" alt="Dev Mother Progression Concept" class="sketch-image" onerror="this.src='./images/mothers-path.png'"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/mothers-path.png</code></div></div>
+                    <div class="sketch-container"><img src="./mother's path.png" alt="Dev Mother Progression Concept" class="sketch-image"></div>
                 </div>
                 <div class="detail-card">
                     <h2 class="detail-heading">02. PROTAGONIST EVOLUTION: BROTHER'S VERSION</h2>
                     <p class="detail-text">Driven by rage and the Brother hallucination, Dev transforms into a dark, menacing figure with a blood-stained hooded cape and fierce Guts-inspired facial features. Armed with a massive greatsword, his combat style, aggressive animations, and audio cues reflect a monstrous state.</p>
-                    <div class="sketch-container"><img src="/brother's path.png" alt="Dev Brother Progression Concept" class="sketch-image" onerror="this.src='./images/brothers-path.png'"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/brothers-path.png</code></div></div>
+                    <div class="sketch-container"><img src="./brother's path.png" alt="Dev Brother Progression Concept" class="sketch-image"></div>
                 </div>
                 <div class="detail-card">
                     <h2 class="detail-heading">03. SUPPORTING CHARACTER: ANAYA</h2>
                     <p class="detail-text">Anaya serves as the priest's daughter and Dev's emotional foil during transitional sequences. She provides limited cooperation and acts as a narrative anchor, shifting perspective and deepening emotional tension throughout Dev's journey.</p>
-                    <div class="sketch-container"><img src="/Anaya.png" alt="Anaya Character Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/anaya_concept.png</code></div></div>
+                    <div class="sketch-container"><img src="./Anaya.png" alt="Anaya Character Concept" class="sketch-image"></div>
                 </div>
                 <div class="detail-card">
                     <h2 class="detail-heading">04. INTERNAL DYNAMICS: HALLUCINATIONS</h2>
                     <p class="detail-text">Mother & Brother act as dynamic dual hallucinations representing moral polarity. They directly guide Dev's actions, alter visual and audio presentation, and debate in Dev's mind to give players insight into his psychological conflict.</p>
-                    <div class="sketch-container"><img src="/hallucinations.png" alt="Hallucination Manifestations" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/hallucinations.png</code></div></div>
+                    <div class="sketch-container"><img src="./hallucinations.png" alt="Hallucination Manifestations" class="sketch-image"></div>
                 </div>
                 <div class="detail-card">
                     <h2 class="detail-heading">05. TARGET ARCHETYPE: THE GATEKEEPER</h2>
                     <p class="detail-text">Encountered on the outskirts of Kuldhara, the Gatekeeper serves as the initial combat challenge for Dev. Designed to introduce basic stealth and silent assassination mechanics.</p>
-                    <div class="sketch-container"><img src="/Gatekeeper.png" alt="The Gatekeeper Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/gatekeeper.png</code></div></div>
+                    <div class="sketch-container"><img src="./Gatekeeper.png" alt="The Gatekeeper Concept" class="sketch-image"></div>
                 </div>
                 <div class="detail-card">
                     <h2 class="detail-heading">06. TARGET ARCHETYPE: THE HUNTER</h2>
                     <p class="detail-text">Deep within the forest tracking routes, the Hunter tests Dev's core stealth and environmental tracking abilities, learning trap evasion and advanced traversal movement.</p>
-                    <div class="sketch-container"><img src="/Hunter.png" alt="The Hunter Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/hunter.png</code></div></div>
+                    <div class="sketch-container"><img src="./Hunter.png" alt="The Hunter Concept" class="sketch-image"></div>
                 </div>
                 <div class="detail-card">
                     <h2 class="detail-heading">07. TARGET ARCHETYPE: THE BLACKSMITH</h2>
                     <p class="detail-text">Encountered in the Forge area, the Blacksmith serves as a major environmental boss fight that directly dictates player moral divergence: spare him under Mother Path or claim his greatsword under Brother Path.</p>
-                    <div class="sketch-container"><img src="/Blacksmith.png" alt="The Blacksmith Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/blacksmith.png</code></div></div>
+                    <div class="sketch-container"><img src="./Blacksmith.png" alt="The Blacksmith Concept" class="sketch-image"></div>
                 </div>
                 <div class="detail-card">
                     <h2 class="detail-heading">08. TARGET ARCHETYPE: THE WITCH WOMAN</h2>
                     <p class="detail-text">Stationed within an illusion-heavy environment filled with spatial traps and sanity-challenging hazards, manipulating navigation feedback.</p>
-                    <div class="sketch-container"><img src="/witch.png" alt="The Witch Woman Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/witch.png</code></div></div>
+                    <div class="sketch-container"><img src="./witch.png" alt="The Witch Woman Concept" class="sketch-image"></div>
                 </div>
                 <div class="detail-card">
                     <h2 class="detail-heading">09. TARGET ARCHETYPE: THE VILLAGE GENERAL</h2>
                     <p class="detail-text">A tactical challenge incorporating enemy patrols, wave reinforcements, and lethal environmental hazards requiring complete weapon mastery.</p>
-                    <div class="sketch-container"><img src="/General.png" alt="The Village General Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/general.png</code></div></div>
+                    <div class="sketch-container"><img src="./General.png" alt="The Village General Concept" class="sketch-image"></div>
                 </div>
                 <div class="detail-card">
                     <h2 class="detail-heading">10. FINAL BOSS: THE PRIEST</h2>
                     <p class="detail-text">The ultimate mastermind behind Kuldhara's brutal traditions. Confrontation branches based on accumulated morality: Mother Ending (sparing the priest) or Brother Ending (total execution).</p>
-                    <div class="sketch-container"><img src="/Priest.png" alt="The Priest Final Boss Concept" class="sketch-image"><div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/priest.png</code></div></div>
+                    <div class="sketch-container"><img src="./Priest.png" alt="The Priest Final Boss Concept" class="sketch-image"></div>
                 </div>
             </div>
         </div>
@@ -1403,7 +1402,7 @@
                     <h2 class="detail-heading">02. INDEX.HTML // HOME HUB & GLOBAL DISCOVERY</h2>
                     <p class="detail-text">The flagship entrance to Absolute Cinema featuring full-viewport cinematic hero branding, a unified universal dark-blue sidebar navigation, and a debounced cross-category search engine.</p>
                     <div class="sketch-container">
-                        <img src="./images/index_page.png" alt="Absolute Cinema Home Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000'">
+                        <img src="./index_page.png" alt="Absolute Cinema Home Page" class="sketch-image">
                     </div>
                 </div>
 
@@ -1411,7 +1410,7 @@
                     <h2 class="detail-heading">03. MOVIES.HTML // TRAKT + TMDB HYBRID EXPLORER</h2>
                     <p class="detail-text">A dual-API movie discovery dashboard merging Trakt.tv trending, most-anticipated, and box office metrics with TMDB's rich metadata and genre discovery.</p>
                     <div class="sketch-container">
-                        <img src="./images/movies_page.png" alt="Absolute Cinema Movies Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1000'">
+                        <img src="./movies_page.png" alt="Absolute Cinema Movies Page" class="sketch-image">
                     </div>
                 </div>
 
@@ -1419,7 +1418,7 @@
                     <h2 class="detail-heading">04. SHOWS.HTML // WEB SERIES & ANIME PROGRESSION ENGINE</h2>
                     <p class="detail-text">A media browser built with a multi-API tab slider spanning live-action web series (TMDB), western animation/cartoons, and anime via Jikan/MyAnimeList with episode tracking.</p>
                     <div class="sketch-container">
-                        <img src="./images/shows_page.png" alt="Absolute Cinema Shows Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=1000'">
+                        <img src="./shows_page.png" alt="Absolute Cinema Shows Page" class="sketch-image">
                     </div>
                 </div>
 
@@ -1427,7 +1426,7 @@
                     <h2 class="detail-heading">05. BOOKS.HTML // LITERATURE, COMICS & MANGA ARCHIVE</h2>
                     <p class="detail-text">A tri-platform library engine integrating Google Books, ComicVine, and Jikan with a bulletproof queue and page-by-page progress trackers.</p>
                     <div class="sketch-container">
-                        <img src="./images/books_page.png" alt="Absolute Cinema Books Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1000'">
+                        <img src="./books_page.png" alt="Absolute Cinema Books Page" class="sketch-image">
                     </div>
                 </div>
 
@@ -1435,7 +1434,7 @@
                     <h2 class="detail-heading">06. GAMES.HTML // RAWG-POWERED GAMING DATABASE</h2>
                     <p class="detail-text">A high-performance gaming archive synced directly to RAWG featuring platform compatibility badges, HD gameplay trailers, and developer-team inspection modals.</p>
                     <div class="sketch-container">
-                        <img src="./images/games_page.png" alt="Absolute Cinema Games Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1000'">
+                        <img src="./games_page.png" alt="Absolute Cinema Games Page" class="sketch-image">
                     </div>
                 </div>
 
@@ -1443,7 +1442,7 @@
                     <h2 class="detail-heading">07. TICKET RESELLING.HTML // P2P CINEMA TICKET MARKETPLACE</h2>
                     <p class="detail-text">An end-to-end peer-to-peer cinema ticket marketplace with a 4-step listing wizard and an interactive seat map engine allowing users to select rows and seats.</p>
                     <div class="sketch-container">
-                        <img src="./images/ticket_reselling_page.png" alt="Absolute Cinema Ticket Reselling Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1000'">
+                        <img src="./ticket_reselling_page.png" alt="Absolute Cinema Ticket Reselling Page" class="sketch-image">
                     </div>
                 </div>
 
@@ -1451,7 +1450,7 @@
                     <h2 class="detail-heading">08. CALENDER.HTML // ETERNAL RELEASE MATRIX & PLANNER</h2>
                     <p class="detail-text">A synchronized release planner that aggregates theatrical debuts, weekly series drops, and global game launches into a month matrix with projection algorithms.</p>
                     <div class="sketch-container">
-                        <img src="./images/calendar_page.png" alt="Absolute Cinema Calendar Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1000'">
+                        <img src="./calendar_page.png" alt="Absolute Cinema Calendar Page" class="sketch-image">
                     </div>
                 </div>
 
@@ -1459,7 +1458,7 @@
                     <h2 class="detail-heading">09. PROFILE.HTML // USER LIBRARY & PARTITIONED STORAGE</h2>
                     <p class="detail-text">A centralized personal dashboard structured with an interactive folder system categorizing local storage bookmarks across all media formats.</p>
                     <div class="sketch-container">
-                        <img src="./images/profile_page.png" alt="Absolute Cinema Profile Page" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1000'">
+                        <img src="./profile_page.png" alt="Absolute Cinema Profile Page" class="sketch-image">
                     </div>
                 </div>
             </div>
@@ -1505,8 +1504,7 @@
                         Curated collection of high-resolution digital manipulations, conceptual posters, and modern brand collaterals crafted with advanced masking and lighting techniques.
                     </p>
                     <div class="sketch-container">
-                        <img src="/image.png" alt="Desktop Publishing Showcase 1" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1626785774573-4b799315345d?w=1000'">
-                        <div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/image.png</code></div>
+                        <img src="./image.png" alt="Desktop Publishing Showcase 1" class="sketch-image">
                     </div>
                 </div>
 
@@ -1516,8 +1514,7 @@
                         Print and desktop publication spreads demonstrating modular grid systems, whitespace management, and customized headline styling.
                     </p>
                     <div class="sketch-container">
-                        <img src="/Picsart_24-10-23_02-06-45-830.png" alt="Desktop Publishing Showcase 2" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1000'">
-                        <div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/Picsart_24-10-23_02-06-45-830.png</code></div>
+                        <img src="./Picsart_24-10-23_02-06-45-830.png" alt="Desktop Publishing Showcase 2" class="sketch-image">
                     </div>
 
                     <div class="action-bar">
@@ -1534,8 +1531,7 @@
                         Advanced environment augmentation, recoloring, and atmospheric depth enhancements applied to standard photography to create striking visual brand assets.
                     </p>
                     <div class="sketch-container">
-                        <img src="/Post.jpeg" alt="Desktop Publishing Showcase 3" class="sketch-image" onerror="this.src='https://images.unsplash.com/photo-1558655146-d09347e92766?w=1000'">
-                        <div class="sketch-prompt-box"><strong>Target Photo Path:</strong> <code>./images/dtp_showcase_3.jpg</code></div>
+                        <img src="./Post.jpeg" alt="Desktop Publishing Showcase 3" class="sketch-image">
                     </div>
                 </div>
 
